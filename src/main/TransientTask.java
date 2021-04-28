@@ -13,7 +13,7 @@ public class TransientTask extends Task{
      * @param date
      * @param tname
      */
-    public TransientTask(float startTime, float duration, int date, Type tname) {
-        super(startTime, duration, date, tname);
+    public TransientTask(String name, float startTime, float duration, int date, Type tname) {
+        super(name, startTime, duration, date, tname);
     }
 }
