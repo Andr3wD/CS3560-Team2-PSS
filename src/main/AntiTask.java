@@ -5,6 +5,7 @@ package main;
  * @author apedroza
  */
 public class AntiTask extends Task {
+	public static String[] types = { "Cancellation" };
 
 	/**
 	 *
@@ -13,8 +14,15 @@ public class AntiTask extends Task {
 	 * @param date
 	 * @param tname
 	 */
-	public AntiTask(String name, float startTime, float duration, int date, Type tname) {
-		super(name, startTime, duration, date, tname);
+	public AntiTask(String name, float startTime, float duration, int date, String tname) {
+		super(name, startTime, duration, date, tname, Task.TaskType.ANTI);
 	}
 
+	public AntiTask(UserHandler handler, String typeName) {
+		super(handler);
+		setTaskType(Task.TaskType.ANTI);
+		setTypeName(typeName);
+		// TODO do specific validation for anti-tasks.
+	}
+	
 }

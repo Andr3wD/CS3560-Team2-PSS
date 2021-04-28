@@ -4,72 +4,68 @@ import java.util.ArrayList;
 
 /**
  *
- * @author apedroza
+ * @author apedroza, Andrew
  */
 public class PSS {
-    private ArrayList<Task> schedule;
-    
-    /**
-     *
-     * @param task
-     */
-    public void createTask(Task task){
-        
-    }
-    
-    /**
-     *
-     * @param taskName
-     * @return
-     */
-    public Task viewTask(String taskName){
-        Task output = null;
-        return output;
-    }
-    
-    /**
-     *
-     * @param taskName
-     * @return
-     */
-    public boolean deleteTask(String taskName){
-        return false;
-    }
-    
-    /**
-     *
-     * @param taskName
-     * @param editedTask
-     */
-    public void editTask(String taskName, Task editedTask){
-        
-    }
-    
-    /**
-     *
-     * @param startTime
-     * @param duration
-     * @return
-     */
-    public String generateSchedule(float startTime, float duration){
-        return "";
-    }
-    
-    /**
-     *
-     * @param fileName
-     * @param startTime
-     * @param duration
-     */
-    public void writeSchedule(String fileName, float startTime, float duration){
-        
-    }
-    
-    /**
-     *
-     * @param fileName
-     */
-    public void loadSchedule(String fileName){
-        
-    }
+	private ArrayList<Task> schedule;
+
+
+	public void createTask(UserHandler handler) {
+		System.out.println("Please input a task type.");
+		// TODO print all types.
+		String type = handler.getLine();
+
+		Task newTask;
+		if (isIn(TransientTask.types, type)) {
+			newTask = new TransientTask(handler, type);
+		} else if (isIn(RecurringTask.types, type)) {
+			newTask = new RecurringTask(handler, type);
+		} else if (isIn(AntiTask.types, type)) {
+			newTask = new AntiTask(handler, type);
+		} else {
+			System.out.println("That task type doesn't exist. Returning to menu.");
+			return;
+		}
+		schedule.add(newTask);
+		System.out.println("Task has been created.");
+	}
+
+	public void viewTask() {
+
+	}
+
+	public void deleteTask() {
+
+	}
+
+	public void editTask() {
+
+	}
+
+	public void generateSchedule() {
+
+	}
+
+	public void writeSchedule() {
+
+	}
+
+	public void loadSchedule() {
+
+	}
+	
+	/**
+	 * Checks if String s is in the String[] arr.
+	 * @param arr
+	 * @param s
+	 * @return If s is in arr.
+	 */
+	private boolean isIn(String[] arr, String s) {
+		for (String str : arr) {
+			if (str.equals(s)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

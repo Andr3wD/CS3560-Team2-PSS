@@ -7,9 +7,10 @@ import org.json.JSONObject;
  * @author apedroza
  */
 public class RecurringTask extends Task {
-	protected int endDate;
-	protected int startDate;
-	protected int frequency;
+	public static String[] types = { "Class", "Study", "Sleep", "Exercise", "Work", "Meal" };
+	private int endDate;
+	private int startDate;
+	private int frequency;
 
 	/**
 	 *
@@ -21,25 +22,56 @@ public class RecurringTask extends Task {
 	 * @param start
 	 * @param freq
 	 */
-	public RecurringTask(String name, float startTime, float duration, int date, Type tname, int end, int start, int freq) {
-		super(name, startTime, duration, date, tname);
+	public RecurringTask(String name, float startTime, float duration, int date, String tname, int end, int start, int freq) {
+		super(name, startTime, duration, date, tname, Task.TaskType.RECURRING);
 		this.endDate = end;
 		this.startDate = start;
 		this.frequency = freq;
 	}
-	
+
+	public RecurringTask(UserHandler handler, String typeName) {
+		super(handler);
+		setTaskType(Task.TaskType.RECURRING);
+		setTypeName(typeName);
+		// TODO get EndDate, StartDate, and Frequency from user using handler.
+	}
+
 	@Override
 	public JSONObject toJson() {
 		JSONObject jObj = new JSONObject();
-		jObj.put("Name", name);
-		jObj.put("StartTime", startTime);
-		jObj.put("Date", date);
-		jObj.put("Duration", duration);
-		jObj.put("Type", typeName.toString());
-		jObj.put("EndDate", endDate);
-		jObj.put("StartDate", startDate);
-		jObj.put("Frequency", frequency);
-
+		jObj.put("Name", getName());
+		jObj.put("StartTime", getStartTime());
+		jObj.put("Date", getDate());
+		jObj.put("Duration", getDuration());
+		jObj.put("Type", getTypeName());
+		jObj.put("EndDate", getEndDate());
+		jObj.put("StartDate", getStartDate());
+		jObj.put("Frequency", getFrequency());
 		return jObj;
 	}
+
+	public int getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(int endDate) {
+		this.endDate = endDate;
+	}
+
+	public int getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(int startDate) {
+		this.startDate = startDate;
+	}
+
+	public int getFrequency() {
+		return frequency;
+	}
+
+	public void setFrequency(int frequency) {
+		this.frequency = frequency;
+	}
+
 }
