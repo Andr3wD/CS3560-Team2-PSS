@@ -10,7 +10,6 @@ import org.json.JSONArray;
 
 /**
  *
- * @author apedroza
  */
 public class DataFile {
 
@@ -39,21 +38,24 @@ public class DataFile {
 	 * 
 	 * @param data
 	 * @param filePath
+	 * @return boolean, if the save was successful or not.
 	 */
 	public static boolean save(ArrayList<Task> data, String filePath) {
 		try {
-			File file = new File(filePath);
+			File file = new File(filePath); // Open file at filePath.
 			FileOutputStream fStream = new FileOutputStream(file); // Make an output stream to the file.
 			
+			// Make JSON array, and fill it with JSONObjects for all Tasks.
 			JSONArray jArr = new JSONArray();
 			for (Task task : data) {
 				jArr.put(task.toJson());
 			}
 			
+			// Write JSON array string representation to the filePath.
 			fStream.write(jArr.toString().getBytes());
-			fStream.close();
 			
-			return true;
+			fStream.close();
+			return true; // 
 		} catch (FileNotFoundException e) {
 			// filePath couldn't be found!
 			System.err.println("ERR: Could not find file to save to!");

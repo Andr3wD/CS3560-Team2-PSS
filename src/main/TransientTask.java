@@ -2,7 +2,6 @@ package main;
 
 /**
  *
- * @author apedroza
  */
 public class TransientTask extends Task {
 

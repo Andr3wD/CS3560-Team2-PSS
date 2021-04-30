@@ -2,7 +2,6 @@ package main;
 
 /**
  *
- * @author apedroza
  */
 public class AntiTask extends Task {
 	public static String[] types = { "Cancellation" };

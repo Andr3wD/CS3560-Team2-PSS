@@ -4,7 +4,6 @@ import org.json.JSONObject;
 
 /**
  *
- * @author apedroza
  */
 public class RecurringTask extends Task {
 	public static String[] types = { "Class", "Study", "Sleep", "Exercise", "Work", "Meal" };
