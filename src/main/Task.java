@@ -14,7 +14,6 @@ public abstract class Task {
 	private float startTime;
 	private float duration;
 	private int date;
-
 	private String typeName;
 	private TaskType taskType;
 
