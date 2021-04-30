@@ -24,4 +24,5 @@ public class TransientTask extends Task {
 		setTaskType(Task.TaskType.TRANSIENT);
 		setTypeName(typeName);
 	}
+	
 }

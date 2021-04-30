@@ -40,7 +40,7 @@ public class UserHandler {
 				pss.editTask();
 				break;
 			case "viewtask":
-				pss.viewTask();
+				pss.viewTask(this);
 				break;
 			case "deletetask":
 				pss.deleteTask();

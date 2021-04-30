@@ -7,8 +7,9 @@ import java.util.ArrayList;
  * @author apedroza, Andrew
  */
 public class PSS {
-	private ArrayList<Task> schedule;
-
+	
+	
+	private ArrayList<Task> schedule = new ArrayList<Task>();
 
 	public void createTask(UserHandler handler) {
 		System.out.println("Please input a task type.");
@@ -30,8 +31,22 @@ public class PSS {
 		System.out.println("Task has been created.");
 	}
 
-	public void viewTask() {
-
+	public void viewTask(UserHandler handler) {
+		System.out.println("Please input the name of the task to view.");
+		String name = handler.getLine();
+		boolean containsTask;//boolean to see if the schedule contains the task
+							 //true if the schedule does contain
+		containsTask = schedule.stream().filter(task -> task.getName().equals(name)).findFirst().isPresent();
+		if(containsTask) {
+			for(Task view : schedule) {
+				if(view.getName().equals(name)) {
+					view.print();//call task's print method to print all attributes
+				}//check if the current task has the same name
+			}//loop through each task in the schedule
+		}//if the schedule does contain the task
+		else {
+			System.out.println("There is no task with this name. Returning to menu.");
+		}
 	}
 
 	public void deleteTask() {

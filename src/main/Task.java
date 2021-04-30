@@ -1,5 +1,8 @@
 package main;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 import org.json.JSONObject;
 
 /**
@@ -67,6 +70,68 @@ public abstract class Task {
 	public boolean overlap(float start, float dur) {
 		return false;
 	}
+	
+	/**
+	 * Method that translates the time from decimal
+	 * to a human readable string based on the
+	 * 12 hour AM/PM clock
+	 *
+	 * @param time of task to translate
+	 * @return readable string
+	 */
+	public String timeToHumanReadable(float time) {
+		double timeAsDouble = time;
+		
+		//If the float value is greater than 13, then 
+		//adjust to PM values
+		if(time >=13) {
+			timeAsDouble = time % 12;
+		}
+		int hours = (int) timeAsDouble; //Variable to hold hour value of time
+		double decimal = timeAsDouble - hours;
+		if(hours == 0) {
+			hours = 12; //If the time has a 0 for hour, or the midnight hour, then hours is 12
+		}
+		int minutes = (int) (decimal * 60); //Variable to translate decimal value to minutes
+		String minutesAsString = Integer.toString(minutes); //Convert minutes to string for editing if needed
+		if(minutesAsString.equals("0")) {				
+			minutesAsString = "00"; //If the minutes for time is 0, then print 00 instead
+		}
+		//If the time is greater or equal to 12, then it is considered PM
+		String readable = (hours + ":" + minutesAsString + " " + ((time>= 12) ? "PM" : "AM"));
+		return readable;
+	}
+	
+	/**
+	 * Method that translates the duration from decimal
+	 * to a human readable string with hours and minutes
+	 * @param duration of task to translate
+	 * @return readable string
+	 */
+	public String durationToHumanReadable(float duration) {
+		int hours = (int) duration; //Store the hour value of the duration
+		double decimal = duration - hours; 
+		int minutes = (int) (decimal * 60); //Store the decimal value of duration as minutes
+		String readable = (hours + " hours and " + minutes + " minutes");
+		return readable;
+	}
+	
+	/**
+	 * Method that translates the date of the task
+	 * to a human readable string in the format
+	 * MM-DD-YYYY
+	 * @param date of task to translate
+	 * @return formattedDate in MM-DD-YYYY
+	 */
+	public String dateToHumanReadable(int date) {
+		String stringDate = String.valueOf(date); //Store the date value as a string
+		
+		//Date is initially in form YYYYMMDD, so convert to MM-DD-YYYY
+	    LocalDate convertedDate = LocalDate.parse(stringDate, DateTimeFormatter.BASIC_ISO_DATE);
+	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+	    String formattedDate = convertedDate.format(formatter);
+	    return formattedDate;
+	}
 
 	public JSONObject toJson() {
 		JSONObject jObj = new JSONObject();
@@ -125,6 +190,14 @@ public abstract class Task {
 
 	public void setTaskType(TaskType taskType) {
 		this.taskType = taskType;
+	}
+	
+	public void print() {
+		System.out.println("Name: " + getName() + 
+							"\n Type: " + getTypeName() + 
+							"\n Date: " + dateToHumanReadable(getDate()) + 
+							"\n Start Time: " + timeToHumanReadable(getStartTime()) +
+							"\n Duration: " + durationToHumanReadable(getDuration()));
 	}
 	
 	

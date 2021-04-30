@@ -73,5 +73,16 @@ public class RecurringTask extends Task {
 	public void setFrequency(int frequency) {
 		this.frequency = frequency;
 	}
+	
+	@Override
+	public void print() {
+		System.out.println("Name: " + getName() + 
+							"\n Type: " + getTypeName() + 
+							"\n Start Date: " + dateToHumanReadable(getStartDate()) + 
+							"\n Start Time: " + timeToHumanReadable(getStartTime()) +
+							"\n Duration: " + durationToHumanReadable(getDuration()) +
+							"\n End Date: " + dateToHumanReadable(getEndDate()) + 
+							"\n Frequency: " + getFrequency());
+	}
 
 }
