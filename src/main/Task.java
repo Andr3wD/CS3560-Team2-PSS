@@ -1,7 +1,9 @@
 package main;
 
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Scanner;
 
 import org.json.JSONObject;
 
@@ -15,6 +17,7 @@ public abstract class Task {
 	private int date;
 	private String typeName;
 	private TaskType taskType;
+        private UserHandler handler; //Used for input in setters. Passed from Constructor
 
 	// TODO LOOKAT there must be a better way to do this, giving the subclasses
 	// their own enums and still having the ability for this class to reference the
@@ -45,13 +48,17 @@ public abstract class Task {
 	}
 
 	public Task(UserHandler handler) {
-		// TODO validation on inputted data.
+                this.handler = handler; //Set handler for Task to be used in other methods
+                
 		System.out.println("Please enter a name:");
 		setName(handler.getLine());
+                
 		System.out.println("Please enter a start time:");
-		setStartTime(handler.getFloat());
+                setStartTime(handler.getFloat());
+                
 		System.out.println("Please enter a duration:");
 		setDuration(handler.getFloat());
+                
 		System.out.println("Please enter a start date:");
 		setDate(handler.getInt());
 	}
@@ -177,30 +184,115 @@ public abstract class Task {
 		this.name = name;
 	}
 
+        /**
+         * Check if the passed startTime is within the 24-hour clock
+         * if not ask for a new number.
+         * Round number to 2 decimals and the nearest Quarter.
+         * @param startTime passed in float time.
+         */
 	public void setStartTime(float startTime) {
-		this.startTime = startTime;
-	}
+            boolean valid = false;
+            
+            ///Make sure the given time is within 24 hours. If not ask for another number.
+            while(!valid){
+                if(startTime <= 24.0 && startTime >= 0.0){
+                    valid = true;
+                }
+                else{
+                    System.out.println("Not a valid startTime, Please enter another time Expressed as a 24-hour time.");
+                    startTime = handler.getFloat();
+                }
+            }
+            
+            //Round Float 2 decimal places.
+            DecimalFormat twoDec = new DecimalFormat("#.##");
+            startTime = Float.valueOf(twoDec.format(startTime));
+            
+            //Round to the nearest 15 minutes
+            startTime = Math.round(startTime*4)/4f;
+            
+            this.startTime = startTime;
+	}//end setStartTime
 
+        /**
+         * Round duration to the nearest 2 decimals and round to the nearest 15 min.
+         * @param duration passed in duration time.
+         */
 	public void setDuration(float duration) {
-		this.duration = duration;
-	}
+            //Round Float 2 decimal places.
+            DecimalFormat twoDec = new DecimalFormat("#.##");
+            duration = Float.valueOf(twoDec.format(duration));
+            
+            //Round to the nearest 15 minutes
+            duration = Math.round(duration*4)/4f;
+            
+            this.duration = duration;
+	}//end setDuration 
 
+        /**
+         * Checks Date to see if it is in the valid format YYYYMMDD
+         * First check that the length of date meets criteria
+         * Check if the Month is valid.
+         * Check if the day is valid for that month.
+         * If One of these checks is not meet as for user to input another date.
+         * @param date passed in date.
+         */
 	public void setDate(int date) {
-		this.date = date;
-	}
+            boolean valid = false;
+            String sDate = String.valueOf(date);
+            int [] dayInMonth = {31,28,31,30,31,30,31,31,30,31,30,31};
+            int month;
+            int day;
+            
+            while(!valid){
+                //Check if date is correct Length for formatting
+                if(sDate.length() == 8){
+                    //Check if it has a valid month
+                    month = Integer.parseInt(sDate.substring(4, 6));
+                    if(month <= 12 && month >= 1){
+                        //Check if day is valid
+                        day = Integer.parseInt(sDate.substring(6, 8));
+                        
+                        int lastDayOfMonth = dayInMonth[month-1];
+                        if(day <= lastDayOfMonth && day >= 1){
+                            date = Integer.parseInt(sDate);
+                            valid = true;
+                        }
+                        else{
+                            System.out.println("Invalid Day, Please enter a day that falls in your month");
+                            sDate = handler.getLine();
+                        }
+                    }
+                    else{
+                        System.out.println("Invalid Month, Please enter a date with a month between 1-12");
+                        sDate = handler.getLine();
+                    }
+                }
+                else{
+                    System.out.println("Incorrect Format, Please enter a new date (YYYYMMDD)");
+                    sDate = handler.getLine();
+                }
+            }
+            
+            this.date = date;
+	}//end setDate
 
 	public void setTypeName(String typeName) {
 		this.typeName = typeName;
-	}
+	}//end setTypeName
 
 	public void setTaskType(TaskType taskType) {
 		this.taskType = taskType;
-	}
+	}//end setTask
 
+        /**
+         * Print a formatted version of the Task we just created
+         */
 	public void print() {
-		System.out.println("Name: " + getName() + "\n Type: " + getTypeName() + "\n Date: "
-				+ dateToHumanReadable(getDate()) + "\n Start Time: " + timeToHumanReadable(getStartTime())
-				+ "\n Duration: " + durationToHumanReadable(getDuration()));
-	}
+		System.out.println("\n"+ "Name: " + getName() + "\n Type: " + getTypeName()
+                                + "\n Date: " + dateToHumanReadable(getDate())
+				 + "\n Start Time: " + timeToHumanReadable(getStartTime())
+				+ "\n Duration: " + durationToHumanReadable(getDuration()) + "\n");
+	}//end Print
 
 }
