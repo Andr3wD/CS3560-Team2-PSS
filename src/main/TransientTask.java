@@ -13,8 +13,9 @@ public class TransientTask extends Task {
 	 * @param duration
 	 * @param date
 	 * @param tname
+	 * @throws Exception 
 	 */
-	public TransientTask(String name, float startTime, float duration, int date, String tname) {
+	public TransientTask(String name, float startTime, float duration, int date, String tname) throws Exception {
 		super(name, startTime, duration, date, tname, Task.TaskType.TRANSIENT);
 	}
 	

@@ -20,8 +20,9 @@ public class RecurringTask extends Task {
 	 * @param end
 	 * @param start
 	 * @param freq
+	 * @throws Exception 
 	 */
-	public RecurringTask(String name, float startTime, float duration, int date, String tname, int end, int start, int freq) {
+	public RecurringTask(String name, float startTime, float duration, int date, String tname, int end, int start, int freq) throws Exception {
 		super(name, startTime, duration, date, tname, Task.TaskType.RECURRING);
 		this.endDate = end;
 		this.startDate = start;

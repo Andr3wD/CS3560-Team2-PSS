@@ -25,17 +25,17 @@ public class PSS {
 			// Make a new TransientTask, asking the new TransientTask to handle the user
 			// interactions for us.
 			newTask = new TransientTask(handler, type);
-                        newTask.print();
+			newTask.print();
 		} else if (isIn(RecurringTask.types, type)) { // If input is of task type Recurring
 			// Make a new RecurringTask, asking the new RecurringTask to handle the user
 			// interactions for us.
 			newTask = new RecurringTask(handler, type);
-                        newTask.print();
+			newTask.print();
 		} else if (isIn(AntiTask.types, type)) { // If input is of task type Anti
 			// Make a new AntiTask, asking the new AntiTask to handle the user interactions
 			// for us.
 			newTask = new AntiTask(handler, type);
-                        newTask.print();
+			newTask.print();
 		} else {
 			System.out.println("That task type doesn't exist. Returning to menu.");
 			return;
@@ -82,22 +82,20 @@ public class PSS {
 
 		if ((schedule == null) || schedule.isEmpty()) { // Checks if the schedule has not been initialized
 			System.out.println("This Schedule is empty.");
-		}
-                else {
+		} else {
 			for (int i = 0; i < schedule.size(); i++) {
-                            // Search through Schedule list
+				// Search through Schedule list
 				if (taskName.equals(schedule.get(i).getName())) {
 					targetTask = schedule.get(i);
 
 					if (targetTask.getTaskType() == Task.TaskType.RECURRING) {
-                                            //Options for Recurring task
-                                            System.out.print(taskName + " Has been deleted scuessfully");
-                                            deleteAntiTasks(targetTask);
-                                            schedule.remove(i);
+						//Options for Recurring task
+						System.out.print(taskName + " Has been deleted scuessfully");
+						deleteAntiTasks(targetTask);
+						schedule.remove(i);
 
-                                            return;
-					}
-					else if (targetTask.getTaskType() == Task.TaskType.ANTI) {
+						return;
+					} else if (targetTask.getTaskType() == Task.TaskType.ANTI) {
 						if (!checkForConflicts((AntiTask) targetTask)) {
 							schedule.remove(i);
 							System.out.println("Anti-Task deleted sucessfully.");
@@ -226,6 +224,20 @@ public class PSS {
 	}// end CheckOverlap
 
 	//////////////////////// TOOLS ////////////////////////
+
+	/**
+	 * Checks all tasks in the schedule for the provided name.
+	 * @param newName
+	 * @return false if newName doesn't exist in the schedule.<br>true if newName exists in the schedule.
+	 */
+	public static Task getTaskByName(String newName) {
+		for (Task task : schedule) {
+			if (task.getName().equals(newName)) {
+				return task;
+			}
+		}
+		return null;
+	}
 
 	/**
 	 * Checks if String s is in the String[] arr.

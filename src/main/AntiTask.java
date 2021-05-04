@@ -12,8 +12,9 @@ public class AntiTask extends Task {
 	 * @param duration
 	 * @param date
 	 * @param tname
+	 * @throws Exception 
 	 */
-	public AntiTask(String name, float startTime, float duration, int date, String tname) {
+	public AntiTask(String name, float startTime, float duration, int date, String tname) throws Exception {
 		super(name, startTime, duration, date, tname, Task.TaskType.ANTI);
 	}
 
