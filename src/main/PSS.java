@@ -116,9 +116,19 @@ public class PSS {
 		} // end else schedule exisits
 	}// end deleteTask()
 
-	public void editTask() {
-
+	public void editTask(UserHandler handler) {
+		System.out.println("Enter the name of the task you want to edit:");
+		String taskName = handler.getLine();
+		Task targetTask = getTaskByName(taskName);
+		if(targetTask == null) {
+			System.out.println("No Task Found with that name returning to menu.");
+			return;
+		}
+		System.out.println("Current attributes for the task:");
+		targetTask.print();
+		
 	}
+		
 
 	public void generateSchedule() {
 

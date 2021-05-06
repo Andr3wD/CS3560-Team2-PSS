@@ -384,9 +384,9 @@ public abstract class Task {
 	 * Print a formatted version of the Task we just created
 	 */
 	public void print() {
-		System.out.println("\n" + "Name: " + getName() + "\n Type: " + getTypeName() + "\n Date: "
-				+ dateToHumanReadable(getDate()) + "\n Start Time: " + timeToHumanReadable(getStartTime())
-				+ "\n Duration: " + durationToHumanReadable(getDuration()) + "\n");
+		System.out.println("Name: " + getName() + "\nType: " + getTypeName() + "\nDate: "
+				+ dateToHumanReadable(getDate()) + "\nStart Time: " + timeToHumanReadable(getStartTime())
+				+ "\nDuration: " + durationToHumanReadable(getDuration()) + "\n");
 	}//end Print
 
 }
