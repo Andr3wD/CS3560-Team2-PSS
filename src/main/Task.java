@@ -49,7 +49,7 @@ public abstract class Task {
 	}
 
 	public Task(UserHandler handler) {
-		System.out.println("Please enter a name:");
+		System.out.println("Please input a unique name for the task.");
 		setName(handler);
 
 		System.out.println("Please enter a start time:");
@@ -62,16 +62,6 @@ public abstract class Task {
 		setDate(handler);
 
 		// TODO validate no overlap with other tasks here.
-	}
-
-	/**
-	 *
-	 * @param start
-	 * @param dur
-	 * @return
-	 */
-	public boolean overlap(float start, float dur) {
-		return false;
 	}
 
 	/**
@@ -260,8 +250,13 @@ public abstract class Task {
 
 	///////////////////////// UserHandler Setters /////////////////////////
 
+        /**
+         * Check if the entered name is not the same as another task in PSS.
+         * Use static method getTaskByName(name) to check against the schedule of tasks in PSS
+         * If taskName already exists as for user to enter another name.
+         * @param handler used for user input
+         */
 	public void setName(UserHandler handler) {
-		System.out.println("Please input a unique name for the task.");
 		String name = handler.getLine();
 
 		// Check if task name already exists, and it's not this.
@@ -319,7 +314,7 @@ public abstract class Task {
 			if (duration <= 23.75 && duration >= 0.25) {
 				valid = true;
 			} else {
-				System.out.println("Not a valid duration, Please enter another time Expressed as a 24-hour time.");
+				System.out.println("Not a valid duration, Please enter another time between 15 minutes and 23.75 hours");
 				duration = handler.getFloat();
 			}
 		}
@@ -388,5 +383,4 @@ public abstract class Task {
 				+ dateToHumanReadable(getDate()) + "\nStart Time: " + timeToHumanReadable(getStartTime())
 				+ "\nDuration: " + durationToHumanReadable(getDuration()) + "\n");
 	}//end Print
-
 }
