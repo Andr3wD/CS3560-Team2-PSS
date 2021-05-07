@@ -39,7 +39,7 @@ public class PSS {
 			System.out.println("That task type doesn't exist. Returning to menu.");
 			return;
 		}
-                
+  
                 //Check for Overlap
                 if(newTaskOverLapCheck(newTask)){
                     System.out.println("Task could not be created because it Overlaps with another task.");
@@ -123,17 +123,81 @@ public class PSS {
 		} // end else schedule exisits
 	}// end deleteTask()
 
+	
+	/**
+	 * Allows user to edit a specific task to have different values.
+	 * If the task is found in the schedule array:
+	 * 		- Delete anti-tasks if editing a recurring task
+	 * 		- Utilize createTask method for editing
+	 * 		- Upon any errors while editing a task, revert schedule prior to any changes
+	 * 
+	 * If task is not found: Message will let the user know.
+	 * 
+	 * @param handler used to capture user input.
+	 */
 	public void editTask(UserHandler handler) {
 		System.out.println("Enter the name of the task you want to edit:");
 		String taskName = handler.getLine();
 		Task targetTask = getTaskByName(taskName);
+		
+		// Check if the task exists and print the attributes
 		if(targetTask == null) {
 			System.out.println("No Task Found with that name returning to menu.");
 			return;
 		}
 		System.out.println("Current attributes for the task:");
 		targetTask.print();
+		ArrayList<Task> oldSchedule = new ArrayList<Task>(schedule); // Temporary schedule to hold the schedule prior to any changes
 		
+		// If the task being edited is recurring, then prompt the user
+		// that all anti-tasks will be deleted on edit
+		if(targetTask.getTaskType() == Task.TaskType.RECURRING) {
+			if(hasAntiTask((RecurringTask) targetTask, targetTask.getDate(), targetTask.getStartTime())) {
+				System.out.println("WARNING: This recurring task has anti-tasks associated with it. "
+						+ "Upon edit, these anti-tasks will be deleted. \nContinue? (Y or N)");
+				if(handler.getLine().equalsIgnoreCase("N")) {
+					System.out.println("No changes made. Returning");
+					return;
+				}
+				else {
+					deleteAntiTasks(targetTask);
+				}
+			}
+		}
+		int initialSize = schedule.size(); // Variable to hold schedule size prior to changes
+		
+		// Remove the task to be edited and call createTask to simulate editing a task
+		for(int i = 0; i < schedule.size(); i++) {
+			if(targetTask.getName().equals(schedule.get(i).getName())) {
+				schedule.remove(i);
+				break;
+			}
+		}
+		createTask(handler); // Calling create task allows checking for overlap with edited task
+		
+		// If the task is never made from createTask, then then reset schedule
+		// the schedule prior to any changes
+		if(initialSize > schedule.size()) {
+			schedule = new ArrayList<Task>(oldSchedule);
+			System.out.println("No changes were made.");
+			return;
+		}
+		Task temp;
+		
+		// Loop through the rest of the schedule to check every task for overlapping
+		for(int i = 0; i < schedule.size()-1; i++) {
+			temp = schedule.get(0);
+			schedule.remove(0);
+			
+			// If the task does overlap, then revert the schedule back and return
+			if(newTaskOverLapCheck(temp)) {
+				schedule = new ArrayList<Task>(oldSchedule);
+				System.out.println("No changes were made.");
+				return;
+			}
+			schedule.add(temp);
+		}
+		System.out.println("Task has been edited.");
 	}
 		
 
@@ -296,17 +360,16 @@ public class PSS {
                     
                     //Check for other Anti-Tasks in schedule
                     if (schedule.get(i).getTaskType() == Task.TaskType.ANTI) {
-			foundAntiTask = schedule.get(i);
+                    	foundAntiTask = schedule.get(i);
                         
                         //Check that an Anti-task with the same permameters does not exist.
-			if (foundAntiTask.getDate() == date &&
+                    	if (foundAntiTask.getDate() == date &&
                             foundAntiTask.getStartTime() == startTime &&
                             foundAntiTask.getDuration() == durration) {
-                            
-				System.out.println("Another Anti-Task, " + foundAntiTask.getName() + ", already exists for this time slot.");
+                            System.out.println("Another Anti-Task, " + foundAntiTask.getName() + ", already exists for this time slot.");
                                 return true;
                         }
-                    }
+                    }            
 		}
             }//end Anti
             else if(newTask.getTaskType() == Task.TaskType.TRANSIENT ){
@@ -320,7 +383,7 @@ public class PSS {
                             float taskTime = startTime + durration;//for newTask
                 
                             //Check if time overlaps
-                            if (taskTime <= (matchingTask.getStartTime()+matchingTask.getDuration()) && taskTime >= startTime) {
+                            if (startTime <= (matchingTask.getStartTime()+matchingTask.getDuration()) && taskTime >= matchingTask.getStartTime()) {
                                 System.out.println("The Transient Task, " + matchingTask.getName() + ", Overlaps with your New Task.");
                                 return true;
                             }
