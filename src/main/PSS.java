@@ -1,6 +1,7 @@
 package main;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 /**
  *
@@ -10,6 +11,9 @@ public class PSS {
         ////////////////////////Main Function Methods///////////////////////////////////////
     
 	public static ArrayList<Task> schedule = new ArrayList<Task>();
+	
+	private int date;
+	
 
 	/**
 	 * Creates a new task, asking each new Task to figure out the user input
@@ -205,9 +209,112 @@ public class PSS {
 
 	}
 
-	public void writeSchedule() {
+	public void writeSchedule()  {
+		// ask user for starting date
+		Scanner scan = new Scanner(System.in);
+		System.out.println("Hello! Please enter what day, week, or month you want the schedule for. (YYYYMMDD)");
 
+		 int num = scan.nextInt();
+		 
+		 // determine schedule for the day, week, or month
+		 System.out.println("Day, Week, Month");
+		 
+		 String timePeriod = "Day";
+		 System.out.println(timePeriod);
+		 		 
+		 //scan.close();
+		 try {
+			// validate the date
+			setDate(num);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		 // save date into time variable
+		 int time = getDate();
+		 System.out.println("Time A: "+ time);
+		 
+		 switch(timePeriod) {
+		 
+		 case "Day":
+			 ArrayList<Task> daySchedule = new ArrayList<Task>();
+			 int i = 0;
+			 
+			 // for every task in the schedule ArrayList compare to given date
+			 for(Task date : schedule) {
+				 System.out.println("Time B: " + time);
+				 System.out.println("Date: " + date.getDate());
+				// search for tasks with that day
+				 if(time == date.getDate()) {
+					 Task newTask = schedule.get(i);
+					 System.out.println(newTask.getName());
+					 System.out.println(newTask);
+					// add those tasks to the schedule array
+					 daySchedule.add(newTask);
+					 i++;
+				 }		 
+			}
+			 break;
+			 
+		 case "Week":
+			 break;
+			 
+		 case "Month":
+		 	break;
+		 	
+		 default:
+			 System.out.println("Not a valid time period.");
+			 break;
+		 }		 
+		// save that array to a JSON file
+		// give schedule a name		
 	}
+
+	
+	public int getDate() {
+		return date;
+	}
+	
+	private void setDate(int date) throws Exception {
+		String sDate = String.valueOf(date);
+		int[] dayInMonth = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+		int month;
+		int day;
+
+		//Check if date is correct Length for formatting
+		if (sDate.length() == 8) {
+			//Check if it has a valid month
+			month = Integer.parseInt(sDate.substring(4, 6));
+			if (month <= 12 && month >= 1) {
+				//Check if day is valid
+				day = Integer.parseInt(sDate.substring(6, 8));
+
+				int lastDayOfMonth = dayInMonth[month - 1];
+				if (day <= lastDayOfMonth && day >= 1) {
+					date = Integer.parseInt(sDate);
+				} else {
+					throw new Exception("Invalid Day, does not fall within the Task.");
+				}
+			} else {
+				throw new Exception("Invalid Month, month " + month + " does not exist.");
+			}
+		} else {
+			throw new Exception("Incorrect date format.");
+		}
+
+		this.date = date;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	public void loadSchedule() {
 
