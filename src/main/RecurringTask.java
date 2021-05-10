@@ -36,6 +36,51 @@ public class RecurringTask extends Task {
 		// TODO get EndDate, StartDate, and Frequency from user using handler.
 	}
 
+	
+	///////////////////////////// UserHandler Setters /////////////////////////////
+
+	public void setEndDate(UserHandler handler) {
+		
+	}
+
+	public void setStartDate(UserHandler handler) {
+		
+	}
+
+	public void setFrequency(UserHandler handler) {
+		
+	}
+	
+	
+	///////////////////////////// Code Setters /////////////////////////////
+	
+	public void setEndDate(int endDate) {
+		this.endDate = endDate;
+	}
+
+	public void setStartDate(int startDate) {
+		this.startDate = startDate;
+	}
+
+	public void setFrequency(int frequency) {
+		this.frequency = frequency;
+	}
+	
+	
+	///////////////////////////// Getters /////////////////////////////
+	
+	public int getEndDate() {
+	return endDate;
+	}
+	
+	public int getStartDate() {
+	return startDate;
+	}
+	
+	public int getFrequency() {
+	return frequency;
+	}
+	
 	@Override
 	public JSONObject toJson() {
 		JSONObject jObj = new JSONObject();
@@ -48,30 +93,6 @@ public class RecurringTask extends Task {
 		jObj.put("StartDate", getStartDate());
 		jObj.put("Frequency", getFrequency());
 		return jObj;
-	}
-
-	public int getEndDate() {
-		return endDate;
-	}
-
-	public void setEndDate(int endDate) {
-		this.endDate = endDate;
-	}
-
-	public int getStartDate() {
-		return startDate;
-	}
-
-	public void setStartDate(int startDate) {
-		this.startDate = startDate;
-	}
-
-	public int getFrequency() {
-		return frequency;
-	}
-
-	public void setFrequency(int frequency) {
-		this.frequency = frequency;
 	}
 	
 	@Override
