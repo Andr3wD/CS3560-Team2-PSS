@@ -18,8 +18,8 @@ public class PSS {
 	 * @param handler
 	 */
 	public void createTask(UserHandler handler) {
-		System.out.println("Please input a task type.");
-		// TODO print all types.
+		System.out.println("Please input a task type from the following options:\n" +
+				"- Class\n- Study\n- Sleep\n- Exercise\n- Work\n- Meal\n- Cancellation\n- Visit\n- Shopping\n- Appointment");
 		String type = handler.getLine();
 
 		Task newTask; // Declare shell task.
