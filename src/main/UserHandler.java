@@ -16,10 +16,10 @@ public class UserHandler {
 	public static void main(String[] args) {
 		PSS pss = new PSS(); // Init PSS
 		UserHandler handler = new UserHandler(pss); // Init the user handler.
-                System.out.println("* Enter One of the Commands Below *");
-                handler.printHelp(); // Show user Options at Start-up
+		System.out.println("* Enter One of the Commands Below *");
+		handler.printHelp(); // Show user Options at Start-up
 		handler.handleUser(); // Start handling user.
-               
+
 	}
 
 	public UserHandler(PSS pss) {
@@ -110,6 +110,7 @@ public class UserHandler {
 	 */
 	private void printHelp() {
 		System.out.print("Commands: ");
-		System.out.println("createtask, edittask, viewtask, deletetask, viewschedule, writeschedule, loadfile, writefile.");
+		System.out.println(
+				"createtask, edittask, viewtask, deletetask, viewschedule, writeschedule, loadfile, writefile.");
 	}
 }

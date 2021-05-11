@@ -24,5 +24,5 @@ public class AntiTask extends Task {
 		setTypeName(typeName);
 		// TODO do specific validation for anti-tasks.
 	}
-	
+
 }

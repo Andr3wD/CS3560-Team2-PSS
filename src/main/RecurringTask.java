@@ -22,7 +22,8 @@ public class RecurringTask extends Task {
 	 * @param freq
 	 * @throws Exception 
 	 */
-	public RecurringTask(String name, float startTime, float duration, int date, String tname, int end, int start, int freq) throws Exception {
+	public RecurringTask(String name, float startTime, float duration, int date, String tname, int end, int start,
+			int freq) throws Exception {
 		super(name, startTime, duration, date, tname, Task.TaskType.RECURRING);
 		this.endDate = end;
 		this.startDate = start;
@@ -36,24 +37,22 @@ public class RecurringTask extends Task {
 		// TODO get EndDate, StartDate, and Frequency from user using handler.
 	}
 
-	
 	///////////////////////////// UserHandler Setters /////////////////////////////
 
 	public void setEndDate(UserHandler handler) {
-		
+
 	}
 
 	public void setStartDate(UserHandler handler) {
-		
+
 	}
 
 	public void setFrequency(UserHandler handler) {
-		
+
 	}
-	
-	
+
 	///////////////////////////// Code Setters /////////////////////////////
-	
+
 	public void setEndDate(int endDate) {
 		this.endDate = endDate;
 	}
@@ -65,22 +64,21 @@ public class RecurringTask extends Task {
 	public void setFrequency(int frequency) {
 		this.frequency = frequency;
 	}
-	
-	
+
 	///////////////////////////// Getters /////////////////////////////
-	
+
 	public int getEndDate() {
-	return endDate;
+		return endDate;
 	}
-	
+
 	public int getStartDate() {
-	return startDate;
+		return startDate;
 	}
-	
+
 	public int getFrequency() {
-	return frequency;
+		return frequency;
 	}
-	
+
 	@Override
 	public JSONObject toJson() {
 		JSONObject jObj = new JSONObject();
@@ -94,16 +92,13 @@ public class RecurringTask extends Task {
 		jObj.put("Frequency", getFrequency());
 		return jObj;
 	}
-	
+
 	@Override
 	public void print() {
-		System.out.println("Name: " + getName() + 
-							"\n Type: " + getTypeName() + 
-							"\n Start Date: " + dateToHumanReadable(getStartDate()) + 
-							"\n Start Time: " + timeToHumanReadable(getStartTime()) +
-							"\n Duration: " + durationToHumanReadable(getDuration()) +
-							"\n End Date: " + dateToHumanReadable(getEndDate()) + 
-							"\n Frequency: " + getFrequency());
+		System.out.println("Name: " + getName() + "\n Type: " + getTypeName() + "\n Start Date: "
+				+ dateToHumanReadable(getStartDate()) + "\n Start Time: " + timeToHumanReadable(getStartTime())
+				+ "\n Duration: " + durationToHumanReadable(getDuration()) + "\n End Date: "
+				+ dateToHumanReadable(getEndDate()) + "\n Frequency: " + getFrequency());
 	}
 
 }

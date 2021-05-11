@@ -17,14 +17,6 @@ public abstract class Task {
 	private String typeName;
 	private TaskType taskType;
 
-	// TODO LOOKAT there must be a better way to do this, giving the subclasses
-	// their own enums and still having the ability for this class to reference the
-	// enum for toJson()
-	@Deprecated
-	public enum Type {
-		Class, Study, Sleep, Exercise, Work, Meal, Visit, Shopping, Appointment, Cancellation
-	}
-
 	public enum TaskType {
 		ANTI, RECURRING, TRANSIENT
 	}
@@ -250,12 +242,12 @@ public abstract class Task {
 
 	///////////////////////// UserHandler Setters /////////////////////////
 
-        /**
-         * Check if the entered name is not the same as another task in PSS.
-         * Use static method getTaskByName(name) to check against the schedule of tasks in PSS
-         * If taskName already exists as for user to enter another name.
-         * @param handler used for user input
-         */
+	/**
+	 * Check if the entered name is not the same as another task in PSS.
+	 * Use static method getTaskByName(name) to check against the schedule of tasks in PSS
+	 * If taskName already exists as for user to enter another name.
+	 * @param handler used for user input
+	 */
 	public void setName(UserHandler handler) {
 		String name = handler.getLine();
 
@@ -298,7 +290,7 @@ public abstract class Task {
 		startTime = Math.round(startTime * 4) / 4f;
 
 		this.startTime = startTime;
-	}//end setStartTime
+	}
 
 	/**
 	 * Round duration to the nearest 2 decimals and round to the nearest 15 min.
@@ -314,7 +306,8 @@ public abstract class Task {
 			if (duration <= 23.75 && duration >= 0.25) {
 				valid = true;
 			} else {
-				System.out.println("Not a valid duration, Please enter another time between 15 minutes and 23.75 hours");
+				System.out
+						.println("Not a valid duration, Please enter another time between 15 minutes and 23.75 hours");
 				duration = handler.getFloat();
 			}
 		}
@@ -327,7 +320,7 @@ public abstract class Task {
 		duration = Math.round(duration * 4) / 4f;
 
 		this.duration = duration;
-	}//end setDuration 
+	}
 
 	/**
 	 * Checks Date to see if it is in the valid format YYYYMMDD
@@ -373,7 +366,7 @@ public abstract class Task {
 		}
 
 		this.date = date;
-	}//end setDate
+	}
 
 	/**
 	 * Print a formatted version of the Task we just created
@@ -382,5 +375,5 @@ public abstract class Task {
 		System.out.println("Name: " + getName() + "\nType: " + getTypeName() + "\nDate: "
 				+ dateToHumanReadable(getDate()) + "\nStart Time: " + timeToHumanReadable(getStartTime())
 				+ "\nDuration: " + durationToHumanReadable(getDuration()) + "\n");
-	}//end Print
+	}
 }
