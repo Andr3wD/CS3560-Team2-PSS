@@ -372,8 +372,13 @@ public abstract class Task {
 	 * Print a formatted version of the Task we just created
 	 */
 	public void print() {
+		float endTime = getStartTime() + getDuration();
+		// If our time that we end wraps past midnight, then adjust to show correct time
+		if(endTime >= 24) {
+			endTime = endTime - 24;
+		}
 		System.out.println("Name: " + getName() + "\nType: " + getTypeName() + "\nDate: "
-				+ dateToHumanReadable(getDate()) + "\nStart Time: " + timeToHumanReadable(getStartTime())
-				+ "\nDuration: " + durationToHumanReadable(getDuration()) + "\n");
+				+ dateToHumanReadable(getDate()) + "\nTime: " + timeToHumanReadable(getStartTime())
+				+ " - " + timeToHumanReadable(endTime) + "\n");
 	}
 }

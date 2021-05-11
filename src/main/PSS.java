@@ -152,7 +152,7 @@ public class PSS {
 		System.out.println("Current attributes for the task:");
 		targetTask.print();
 		ArrayList<Task> oldSchedule = new ArrayList<Task>(schedule); // Temporary schedule to hold the schedule prior to any changes
-
+		
 		// If the task being edited is recurring, then prompt the user
 		// that all anti-tasks will be deleted on edit
 		if (targetTask.getTaskType() == Task.TaskType.RECURRING) {
@@ -167,6 +167,7 @@ public class PSS {
 				}
 			}
 		}
+		
 		int initialSize = schedule.size(); // Variable to hold schedule size prior to changes
 
 		// Remove the task to be edited and call createTask to simulate editing a task
@@ -300,7 +301,7 @@ public class PSS {
 	public static boolean checkOverlap(RecurringTask recurringTask) {
 		ArrayList<Task> conflicts = new ArrayList<Task>();
 		boolean overlapFound = false;
-		int startDate = ((RecurringTask) recurringTask).getStartDate();
+		int startDate = ((RecurringTask) recurringTask).getDate();
 		int endDate = ((RecurringTask) recurringTask).getEndDate();
 		float startTime = recurringTask.getStartTime();
 		float endTime = recurringTask.getStartTime() + recurringTask.getDuration();
@@ -500,15 +501,15 @@ public class PSS {
 	public boolean hasAntiTask(RecurringTask task, int Date, float StartTime) {
 		//Check that another Anti Task does not already exist here
 		ArrayList<AntiTask> foundAntiTask = new ArrayList<>();
-		ArrayList<Integer> RDays = createDays(task);
+		ArrayList<Integer> RDays = new ArrayList<>(createDays(task));
 		int recDate;
 
 		for (int i = 0; i < RDays.size(); i++) {
 			recDate = RDays.get(i);
-			for (int x = 0; x < schedule.size(); i++) {
+			for (int x = 0; x < schedule.size(); x++) {
 				if (schedule.get(x).getTaskType() == Task.TaskType.ANTI) {
 					//Get All the Anti-Tasks for RecurringTask
-					if (schedule.get(x).getDate() == recDate && schedule.get(x).getStartTime() == task.getStartDate()) {
+					if (schedule.get(x).getDate() == recDate && schedule.get(x).getStartTime() == task.getDate()) {
 						foundAntiTask.add((AntiTask) schedule.get(x)); // Add to list of found AntiTasks
 					}
 				}
@@ -520,7 +521,6 @@ public class PSS {
 				return true; //Found an antitask for the Passed in Reccuring task that matches the parameters(Date,StartTime) of our new Task
 			}
 		}
-
 		return false; //No matching AntiTask Found
 	}
 
@@ -532,7 +532,7 @@ public class PSS {
 	 */
 	public ArrayList<Integer> createDays(RecurringTask task) {
 		ArrayList<Integer> daysScheduled = new ArrayList<>();
-		int startDate = task.getStartDate();
+		int startDate = task.getDate();
 		int endDate = task.getEndDate();
 		int freq = task.getFrequency();
 		int newDate = startDate; //Holds the New Date after Additon
