@@ -26,14 +26,17 @@ public class PSS {
 		if (isIn(TransientTask.types, type)) { // If input is of task type Transient
 			// Make a new TransientTask, asking the new TransientTask to handle the user
 			// interactions for us.
+			System.out.println("You have selected type Transient Task.");
 			newTask = new TransientTask(handler, type);
 		} else if (isIn(RecurringTask.types, type)) { // If input is of task type Recurring
 			// Make a new RecurringTask, asking the new RecurringTask to handle the user
 			// interactions for us.
+			System.out.println("You have selected type Recurring Task.");
 			newTask = new RecurringTask(handler, type);
 		} else if (isIn(AntiTask.types, type)) { // If input is of task type Anti
 			// Make a new AntiTask, asking the new AntiTask to handle the user interactions
 			// for us.
+			System.out.println("You have selected type Anti-Task.");
 			newTask = new AntiTask(handler, type);
 		} else {
 			System.out.println("That task type doesn't exist. Returning to menu.");
@@ -207,8 +210,13 @@ public class PSS {
 
 	}
 
-	public void loadSchedule() {
-
+	public void loadSchedule(UserHandler handler) {
+		ArrayList<Task> loadingSchedule = DataFile.load(handler);
+		if (loadingSchedule != null) {
+			schedule = loadingSchedule;
+		} else {
+			System.out.println("Error loading schedule from file.");
+		}
 	}
 
 	///////////////////////////Helper Methods for deleteTask()////////////////////////////////////////////
@@ -390,7 +398,7 @@ public class PSS {
 						if (startTime <= (matchingTask.getStartTime() + matchingTask.getDuration())
 								&& taskTime >= matchingTask.getStartTime()) {
 							System.out.println(
-									"The Transient Task, " + matchingTask.getName() + ", Overlaps with your New Task.");
+									"The Transient Task, " + matchingTask.getName() + ", overlaps with your New Task.");
 							return true;
 						}
 					}
@@ -408,7 +416,7 @@ public class PSS {
 										newTask.getStartTime())) {
 									//If no anti task is found then there is overlap
 									System.out.println("The Reccuring Task, " + matchingTask.getName()
-											+ ", Overlaps with your New Task.");
+											+ ", overlaps with your New Task.");
 									return true;
 								}
 							}
@@ -432,7 +440,7 @@ public class PSS {
 									&& endTime >= matchingTask.getStartTime()) {
 								//Since this is a new Reccuring Task it will not have any anti-Tasks and neither will the Transient task we are checking
 								System.out.println("The Transient Task, " + matchingTask.getName()
-										+ ", Overlaps with your New Task.");
+										+ ", overlaps with your New Task.");
 								return true;
 							}
 						}
@@ -454,7 +462,7 @@ public class PSS {
 									if (!hasAntiTask((RecurringTask) matchingTask, newTask.getDate(),
 											newTask.getStartTime())) {
 										System.out.println("The Reccuring Task " + matchingTask.getName()
-												+ ", Overlaps with your new task.");
+												+ ", overlaps with your new task.");
 										return true;//add antitask and Sys message
 									}
 								}

@@ -51,8 +51,8 @@ public class DataFile {
 				} else if (PSS.isIn(RecurringTask.types, type)) {
 
 					newTask = new RecurringTask(jobj.getString("Name"), jobj.getFloat("StartTime"),
-							jobj.getFloat("Duration"), jobj.getInt("Date"), type, jobj.getInt("EndDate"),
-							jobj.getInt("StartDate"), jobj.getInt("Frequency"));
+							jobj.getFloat("Duration"), jobj.getInt("StartDate"), type, jobj.getInt("EndDate"),
+							jobj.getInt("Frequency"));
 
 				} else if (PSS.isIn(AntiTask.types, type)) {
 
@@ -105,6 +105,7 @@ public class DataFile {
 	 * @return boolean, if the save was successful or not.
 	 */
 	public static boolean save(ArrayList<Task> data, String filePath) {
+		//TODO change to take in UserHandler.
 		try {
 			File file = new File(filePath); // Open file at filePath.
 			FileOutputStream fStream = new FileOutputStream(file); // Make an output stream to the file.

@@ -19,7 +19,6 @@ public class UserHandler {
 		System.out.println("* Enter One of the Commands Below *");
 		handler.printHelp(); // Show user Options at Start-up
 		handler.handleUser(); // Start handling user.
-
 	}
 
 	public UserHandler(PSS pss) {
@@ -61,17 +60,19 @@ public class UserHandler {
 				pss.writeSchedule();
 				break;
 			case "loadfile":
-				pss.loadSchedule();
+				pss.loadSchedule(this);
 				break;
 			case "writefile":
 				pss.writeSchedule();
 				break;
-			case "quit":
+			case "": // Allow the user to make empty newlines.
+				break;
+			case "quit": case "exit": case "logout": case "stop": case "shutdown":
 				running = false;
 				System.out.println("Goodbye!");
 				break;
 			default:
-				System.out.println("Unknown command. Input \"help\" to see commands.");
+				System.out.println("Unknown command. Inpuviewtt \"help\" to see commands.");
 				break;
 			}
 		}
@@ -110,7 +111,6 @@ public class UserHandler {
 	 */
 	private void printHelp() {
 		System.out.print("Commands: ");
-		System.out.println(
-				"createtask, edittask, viewtask, deletetask, viewschedule, writeschedule, loadfile, writefile.");
+		System.out.println("createtask, edittask, viewtask, deletetask, viewschedule, writeschedule, loadfile, writefile.");
 	}
 }

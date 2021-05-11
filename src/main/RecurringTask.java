@@ -8,6 +8,8 @@ import org.json.JSONObject;
 public class RecurringTask extends Task {
 	public static String[] types = { "Class", "Study", "Sleep", "Exercise", "Work", "Meal" };
 	private int endDate;
+	// startDate is just the regular date.
+	@Deprecated
 	private int startDate;
 	private int frequency;
 
@@ -22,11 +24,13 @@ public class RecurringTask extends Task {
 	 * @param freq
 	 * @throws Exception 
 	 */
-	public RecurringTask(String name, float startTime, float duration, int date, String tname, int end, int start,
-			int freq) throws Exception {
+	public RecurringTask(String name, float startTime, float duration, int date, String tname, int end, int freq) throws Exception {
 		super(name, startTime, duration, date, tname, Task.TaskType.RECURRING);
+		// Make sure the type matches what this Task can take.
+		if (!PSS.isIn(types, tname)) {
+			throw new Exception(String.format("Invalid type %s for Recurring Task.", tname));
+		}
 		this.endDate = end;
-		this.startDate = start;
 		this.frequency = freq;
 	}
 
@@ -57,8 +61,9 @@ public class RecurringTask extends Task {
 		this.endDate = endDate;
 	}
 
-	public void setStartDate(int startDate) {
-		this.startDate = startDate;
+	@Deprecated
+	public void setStartDate(int startDate) throws Exception {
+		setDate(startDate);
 	}
 
 	public void setFrequency(int frequency) {
@@ -71,8 +76,9 @@ public class RecurringTask extends Task {
 		return endDate;
 	}
 
+	@Deprecated
 	public int getStartDate() {
-		return startDate;
+		return getDate();
 	}
 
 	public int getFrequency() {
@@ -84,21 +90,20 @@ public class RecurringTask extends Task {
 		JSONObject jObj = new JSONObject();
 		jObj.put("Name", getName());
 		jObj.put("StartTime", getStartTime());
-		jObj.put("Date", getDate());
+		jObj.put("StartDate", getDate());
 		jObj.put("Duration", getDuration());
 		jObj.put("Type", getTypeName());
 		jObj.put("EndDate", getEndDate());
-		jObj.put("StartDate", getStartDate());
 		jObj.put("Frequency", getFrequency());
 		return jObj;
 	}
 
 	@Override
 	public void print() {
-		System.out.println("Name: " + getName() + "\n Type: " + getTypeName() + "\n Start Date: "
-				+ dateToHumanReadable(getStartDate()) + "\n Start Time: " + timeToHumanReadable(getStartTime())
-				+ "\n Duration: " + durationToHumanReadable(getDuration()) + "\n End Date: "
-				+ dateToHumanReadable(getEndDate()) + "\n Frequency: " + getFrequency());
+		System.out.println("Name: " + getName() + "\nType: " + getTypeName() + "\nStart Date: "
+				+ dateToHumanReadable(getStartDate()) + "\nStart Time: " + timeToHumanReadable(getStartTime())
+				+ "\nDuration: " + durationToHumanReadable(getDuration()) + "\nEnd Date: "
+				+ dateToHumanReadable(getEndDate()) + "\nFrequency: " + getFrequency());
 	}
 
 }

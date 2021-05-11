@@ -16,6 +16,10 @@ public class AntiTask extends Task {
 	 */
 	public AntiTask(String name, float startTime, float duration, int date, String tname) throws Exception {
 		super(name, startTime, duration, date, tname, Task.TaskType.ANTI);
+		// Make sure the type matches what this Task can take.
+		if (!PSS.isIn(types, tname)) {
+			throw new Exception(String.format("Invalid type %s for Anti-Task.", tname));
+		}
 	}
 
 	public AntiTask(UserHandler handler, String typeName) {
