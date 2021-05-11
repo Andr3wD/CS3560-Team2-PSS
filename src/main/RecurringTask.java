@@ -28,8 +28,8 @@ public class RecurringTask extends Task {
 		if (!PSS.isIn(types, tname)) {
 			throw new Exception(String.format("Invalid type %s for Recurring Task.", tname));
 		}
-		this.endDate = end;
-		this.frequency = freq;
+		setEndDate(end);
+		setFrequency(freq);
 	}
 
 	public RecurringTask(UserHandler handler, String typeName) {
@@ -83,7 +83,7 @@ public class RecurringTask extends Task {
 			}
 		}while(!valid && date>=startDate);
 
-		setEndDate(date);
+		this.endDate = date;
 	}
 
 	public void setFrequency(UserHandler handler) {
@@ -100,12 +100,13 @@ public class RecurringTask extends Task {
 				freq = handler.getInt();
 			}
 		}
-		setFrequency(freq);
+		this.frequency = freq;
 	}
 
 	///////////////////////////// Code Setters /////////////////////////////
 
 	public void setEndDate(int endDate) {
+		// TODO validation on endDate, but with raw input from code.
 		this.endDate = endDate;
 	}
 
@@ -115,6 +116,7 @@ public class RecurringTask extends Task {
 	}
 
 	public void setFrequency(int frequency) {
+		// TODO validation on frequency, but with raw input from code.
 		this.frequency = frequency;
 	}
 
