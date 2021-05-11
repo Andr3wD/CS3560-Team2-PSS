@@ -202,12 +202,23 @@ public class PSS {
 		System.out.println("Task has been edited.");
 	}
 
-	public void generateSchedule() {
+	public void generateSchedule(UserHandler handler) {
 
 	}
 
-	public void writeSchedule() {
+	public void writeSchedule(UserHandler handler) {
 
+	}
+	
+	public void writeWholeSchedule(UserHandler userHandler) {
+		System.out.println("Please input a file location to save the whole schedule to:");
+		String fileLocation = userHandler.getLine();
+		try {
+			DataFile.save(schedule, fileLocation);
+			System.out.println("Schedule has been saved to: " + fileLocation);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
 	}
 
 	public void loadSchedule(UserHandler handler) {

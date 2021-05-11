@@ -54,16 +54,16 @@ public class UserHandler {
 				pss.deleteTask(this);
 				break;
 			case "viewschedule":
-				pss.generateSchedule();
+				pss.generateSchedule(this);
 				break;
 			case "writeschedule":
-				pss.writeSchedule();
+				pss.writeSchedule(this);
 				break;
 			case "loadfile":
 				pss.loadSchedule(this);
 				break;
 			case "writefile":
-				pss.writeSchedule();
+				pss.writeWholeSchedule(this);
 				break;
 			case "": // Allow the user to make empty newlines.
 				break;
@@ -72,7 +72,7 @@ public class UserHandler {
 				System.out.println("Goodbye!");
 				break;
 			default:
-				System.out.println("Unknown command. Inpuviewtt \"help\" to see commands.");
+				System.out.println("Unknown command. Input \"help\" to see commands.");
 				break;
 			}
 		}
