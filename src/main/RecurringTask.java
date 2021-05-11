@@ -150,9 +150,13 @@ public class RecurringTask extends Task {
 
 	@Override
 	public void print() {
+		float endTime = getStartTime() + getDuration();
+		if(endTime >= 24) {
+			endTime = endTime - 24;
+		}
 		System.out.println("Name: " + getName() + "\nType: " + getTypeName() + "\nStart Date: "
-				+ dateToHumanReadable(getStartDate()) + "\nStart Time: " + timeToHumanReadable(getStartTime())
-				+ "\nDuration: " + durationToHumanReadable(getDuration()) + "\nEnd Date: "
+				+ dateToHumanReadable(getDate()) + "\nStart Time: " + timeToHumanReadable(getStartTime())
+				+ " - " + timeToHumanReadable(endTime) + "\nEnd Date: "
 				+ dateToHumanReadable(getEndDate()) + "\nFrequency: " + getFrequency());
 	}
 
