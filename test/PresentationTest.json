@@ -1,0 +1,23 @@
+[
+  {
+    "Name" : "Doctors Apt",
+    "Type" : "Appointment",
+    "Date" : 20210513,
+    "StartTime" : 11,
+    "Duration" : 1
+  },
+  {
+    "Name" : "Buy Food",
+    "Type" : "Shopping",
+    "Date" : 20210513,
+    "StartTime" : 9,
+    "Duration" : 1.5
+  },
+  {
+    "Name" : "CS3560 PSS Presentation",
+    "Type" : "Appointment",
+    "Date" : 20210511,
+    "StartTime" : 17.5,
+    "Duration" : 1.25
+  }
+]

@@ -101,10 +101,11 @@ public class PSS {
 
 					if (targetTask.getTaskType() == Task.TaskType.RECURRING) {
 						//Options for Recurring task
-						System.out.print(taskName + " Has been deleted scuessfully");
+						
 						deleteAntiTasks(targetTask);
 						schedule.remove(i);
-
+						System.out.print(taskName + " Has been deleted scuessfully");
+						
 						return;
 					} else if (targetTask.getTaskType() == Task.TaskType.ANTI) {
 						if (!checkForConflicts((AntiTask) targetTask)) {
@@ -185,6 +186,8 @@ public class PSS {
 			return;
 		}
 		Task temp;
+		
+		// TODO replace with newTaskOverlapCheck().
 
 		// Loop through the rest of the schedule to check every task for overlapping
 		for (int i = 0; i < schedule.size() - 1; i++) {
