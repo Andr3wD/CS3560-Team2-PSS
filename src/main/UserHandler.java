@@ -58,13 +58,13 @@ public class UserHandler {
 				pss.generateSchedule();
 				break;
 			case "writeschedule":
-				pss.writeSchedule();
+				pss.writeSchedule(this);
 				break;
 			case "loadfile":
 				pss.loadSchedule();
 				break;
 			case "writefile":
-				pss.writeSchedule();
+				pss.writeSchedule(this);
 				break;
 			case "quit":
 				running = false;

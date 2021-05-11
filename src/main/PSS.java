@@ -1,7 +1,7 @@
 package main;
 
 import java.util.ArrayList;
-import java.util.Scanner;
+
 
 /**
  *
@@ -11,9 +11,7 @@ public class PSS {
         ////////////////////////Main Function Methods///////////////////////////////////////
     
 	public static ArrayList<Task> schedule = new ArrayList<Task>();
-	
-	private int date;
-	
+		
 
 	/**
 	 * Creates a new task, asking each new Task to figure out the user input
@@ -209,112 +207,94 @@ public class PSS {
 
 	}
 
-	public void writeSchedule()  {
-		// ask user for starting date
-		Scanner scan = new Scanner(System.in);
-		System.out.println("Hello! Please enter what day, week, or month you want the schedule for. (YYYYMMDD)");
+	/**
+	 * Method to write daily, weekly, or monthly schedule determined by the user, to a file.
+	 * @param handler
+	 */
+	public void writeSchedule(UserHandler handler)  {
+		int startDate;
+		int endDate;
+		String fileLocation = null;
+		String timePeriod = null;
 
-		 int num = scan.nextInt();
+		// ask user for starting date
+		System.out.println("Hello! Please enter starting date for what day, week, or month you want the schedule for. (YYYYMMDD)");
+		startDate = Integer.parseInt(handler.getLine());
 		 
-		 // determine schedule for the day, week, or month
-		 System.out.println("Day, Week, Month");
-		 
-		 String timePeriod = "Day";
-		 System.out.println(timePeriod);
-		 		 
-		 //scan.close();
-		 try {
-			// validate the date
-			setDate(num);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		 // save date into time variable
-		 int time = getDate();
-		 System.out.println("Time A: "+ time);
-		 
+		// user determines schedule for the day, week, or month
+		System.out.println("Day, Week, Month");
+		timePeriod = handler.getLine();
+
+		// user determines file location
+		System.out.println("Please input a file location to save the whole schedule to:");
+		fileLocation = handler.getLine();
+ 
 		 switch(timePeriod) {
-		 
 		 case "Day":
-			 ArrayList<Task> daySchedule = new ArrayList<Task>();
-			 int i = 0;
-			 
+			 ArrayList<Task> daySchedule = new ArrayList<Task>();	 
 			 // for every task in the schedule ArrayList compare to given date
-			 for(Task date : schedule) {
-				 System.out.println("Time B: " + time);
-				 System.out.println("Date: " + date.getDate());
+			 for(Task task : schedule) {
 				// search for tasks with that day
-				 if(time == date.getDate()) {
-					 Task newTask = schedule.get(i);
-					 System.out.println(newTask.getName());
-					 System.out.println(newTask);
-					// add those tasks to the schedule array
-					 daySchedule.add(newTask);
-					 i++;
+				 if(startDate == task.getDate()) {
+					 // add that task to daySchedule
+					daySchedule.add(task);
+					//task.print();
 				 }		 
 			}
+			 
+			 printSchedule(daySchedule);
+			 
+				DataFile.save(daySchedule, fileLocation);
+				System.out.println("Day schedule has been saved to: " + fileLocation);
 			 break;
 			 
 		 case "Week":
+			 ArrayList<Task> weeklySchedule = new ArrayList<Task>();
+			 endDate = addDay(startDate, 6);
+			 // for every task in the schedule ArrayList compare to dates between startDate and endDate...
+			 for(Task task : schedule) {
+				 if((startDate <= task.getDate()) && (task.getDate() <= endDate)) {
+					 // add tasks between startDate and endDate to a weekly schedule
+					weeklySchedule.add(task);
+				 }		 
+		} 
+			 printSchedule(weeklySchedule);
+			 
+				DataFile.save(weeklySchedule, fileLocation);
+				System.out.println("Weekly schedule has been saved to: " + fileLocation);	
 			 break;
 			 
 		 case "Month":
+			 ArrayList<Task> monthlySchedule = new ArrayList<Task>();
+			 endDate = addDay(startDate, 29);
+			 System.out.println("startDate: " + startDate);
+			 System.out.println("endDate: " + endDate);
+			 // for every task in the schedule ArrayList compare to dates between startDate and endDate...
+			 for(Task task : schedule) {
+				 if((startDate <= task.getDate()) && (task.getDate() <= endDate)) {
+					// add tasks between startDate and endDate to a monthly schedule
+					monthlySchedule.add(task);
+			}
+		}
+			 printSchedule(monthlySchedule);
+			 
+				DataFile.save(monthlySchedule, fileLocation);
+				System.out.println("Week schedule has been saved to: " + fileLocation);
+
 		 	break;
 		 	
 		 default:
 			 System.out.println("Not a valid time period.");
 			 break;
 		 }		 
-		// save that array to a JSON file
-		// give schedule a name		
-	}
-
+}
 	
-	public int getDate() {
-		return date;
-	}
-	
-	private void setDate(int date) throws Exception {
-		String sDate = String.valueOf(date);
-		int[] dayInMonth = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
-		int month;
-		int day;
-
-		//Check if date is correct Length for formatting
-		if (sDate.length() == 8) {
-			//Check if it has a valid month
-			month = Integer.parseInt(sDate.substring(4, 6));
-			if (month <= 12 && month >= 1) {
-				//Check if day is valid
-				day = Integer.parseInt(sDate.substring(6, 8));
-
-				int lastDayOfMonth = dayInMonth[month - 1];
-				if (day <= lastDayOfMonth && day >= 1) {
-					date = Integer.parseInt(sDate);
-				} else {
-					throw new Exception("Invalid Day, does not fall within the Task.");
-				}
-			} else {
-				throw new Exception("Invalid Month, month " + month + " does not exist.");
-			}
-		} else {
-			throw new Exception("Incorrect date format.");
+	private void printSchedule(ArrayList<Task> someSchedule) {
+		System.out.println("Your schedule: ");
+		for(Task task: someSchedule) {
+			task.print();
 		}
-
-		this.date = date;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 
 	public void loadSchedule() {
 
