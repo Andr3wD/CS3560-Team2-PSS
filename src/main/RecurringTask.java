@@ -8,9 +8,6 @@ import org.json.JSONObject;
 public class RecurringTask extends Task {
 	public static String[] types = { "Class", "Study", "Sleep", "Exercise", "Work", "Meal" };
 	private int endDate;
-	// startDate is just the regular date.
-	@Deprecated
-	private int startDate;
 	private int frequency;
 
 	/**
@@ -20,10 +17,11 @@ public class RecurringTask extends Task {
 	 * @param date
 	 * @param tname
 	 * @param end
-	 * @param start
+	 * @param date
 	 * @param freq
-	 * @throws Exception 
+	 * @throws Exception
 	 */
+
 	public RecurringTask(String name, float startTime, float duration, int date, String tname, int end, int freq) throws Exception {
 		super(name, startTime, duration, date, tname, Task.TaskType.RECURRING);
 		// Make sure the type matches what this Task can take.
@@ -38,21 +36,71 @@ public class RecurringTask extends Task {
 		super(handler);
 		setTaskType(Task.TaskType.RECURRING);
 		setTypeName(typeName);
-		// TODO get EndDate, StartDate, and Frequency from user using handler.
+
+		System.out.println("Please enter an end date: ");
+		setEndDate(handler);
+
+		System.out.println("Please enter frequency: ");
+		setFrequency(handler);
 	}
+
 
 	///////////////////////////// UserHandler Setters /////////////////////////////
 
 	public void setEndDate(UserHandler handler) {
+		int date = handler.getInt();
+		boolean valid = false;
+		String sDate = String.valueOf(date);
+		int[] dayInMonth = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+		int month;
+		int day;
+		int startDate = getDate();
 
-	}
+		do{
+			//Check if date is correct Length for formatting
+			if (sDate.length() == 8) {
+				//Check if it has a valid month
+				month = Integer.parseInt(sDate.substring(4, 6));
+				if (month <= 12 && month >= 1) {
+					//Check if day is valid
+					day = Integer.parseInt(sDate.substring(6, 8));
 
-	public void setStartDate(UserHandler handler) {
+					int lastDayOfMonth = dayInMonth[month - 1];
+					if (day <= lastDayOfMonth && day >= 1) {
+						date = Integer.parseInt(sDate);
+						valid = true;
+					} else {
+						System.out.println("Invalid Day, Please enter a day that falls in your month");
+						sDate = handler.getLine();
+					}
+				} else {
+					System.out.println("Invalid Month, Please enter a date with a month between 1-12");
+					sDate = handler.getLine();
+				}
+			} else {
+				System.out.println("Incorrect Format, Please enter a new date (YYYYMMDD)");
+				sDate = handler.getLine();
+			}
+		}while(!valid && date>=startDate);
 
+		setEndDate(date);
 	}
 
 	public void setFrequency(UserHandler handler) {
+		int freq = handler.getInt();
+		int sFreq = String.valueOf(freq).length();
+		boolean valid = false;
 
+		while(!valid) {
+			// Check if length of frequency is valid
+			if (sFreq>0){
+				valid = true;
+			} else {
+				System.out.println("Invalid Frequency, Please enter a frequency with a value greater than 0");
+				freq = handler.getInt();
+			}
+		}
+		setFrequency(freq);
 	}
 
 	///////////////////////////// Code Setters /////////////////////////////
