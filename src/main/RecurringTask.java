@@ -155,7 +155,7 @@ public class RecurringTask extends Task {
 			endTime = endTime - 24;
 		}
 		System.out.println("Name: " + getName() + "\nType: " + getTypeName() + "\nStart Date: "
-				+ dateToHumanReadable(getDate()) + "\nStart Time: " + timeToHumanReadable(getStartTime())
+				+ dateToHumanReadable(getDate()) + "\nTime: " + timeToHumanReadable(getStartTime())
 				+ " - " + timeToHumanReadable(endTime) + "\nEnd Date: "
 				+ dateToHumanReadable(getEndDate()) + "\nFrequency: " + getFrequency());
 	}
