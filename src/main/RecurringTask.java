@@ -88,19 +88,18 @@ public class RecurringTask extends Task {
 
 	public void setFrequency(UserHandler handler) {
 		int freq = handler.getInt();
-		int sFreq = String.valueOf(freq).length();
 		boolean valid = false;
 
 		while(!valid) {
 			// Check if length of frequency is valid
-			if (sFreq>0){
+			if (freq==1 || freq ==7){
 				valid = true;
 			} else {
-				System.out.println("Invalid Frequency, Please enter a frequency with a value greater than 0");
+				System.out.println("Invalid Frequency, Please enter a frequency equal to 1(once a day) of 7(every week)");
 				freq = handler.getInt();
 			}
 		}
-		this.frequency = freq;
+		setFrequency(freq);
 	}
 
 	///////////////////////////// Code Setters /////////////////////////////
