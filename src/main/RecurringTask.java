@@ -1,7 +1,6 @@
 package main;
 
 import org.json.JSONObject;
-
 /**
  *
  */
@@ -9,7 +8,6 @@ public class RecurringTask extends Task {
 	public static String[] types = { "Class", "Study", "Sleep", "Exercise", "Work", "Meal" };
 	private int endDate;
 	private int frequency;
-
 	/**
 	 *
 	 * @param startTime
@@ -83,30 +81,59 @@ public class RecurringTask extends Task {
 			}
 		}while(!valid && date>=startDate);
 
-		this.endDate = date;
+		this.endDate=date;
 	}
 
 	public void setFrequency(UserHandler handler) {
 		int freq = handler.getInt();
-		int sFreq = String.valueOf(freq).length();
 		boolean valid = false;
 
 		while(!valid) {
 			// Check if length of frequency is valid
-			if (sFreq>0){
+			if (freq==1 || freq ==7){
 				valid = true;
 			} else {
-				System.out.println("Invalid Frequency, Please enter a frequency with a value greater than 0");
+				System.out.println("Invalid Frequency, Please enter a frequency equal to 1(once a day) of 7(every week)");
 				freq = handler.getInt();
 			}
 		}
 		this.frequency = freq;
 	}
 
+
 	///////////////////////////// Code Setters /////////////////////////////
 
-	public void setEndDate(int endDate) {
-		// TODO validation on endDate, but with raw input from code.
+	public void setEndDate(int endDate) throws Exception {
+		String sDate = String.valueOf(endDate);
+		int[] dayInMonth = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+		int month;
+		int day;
+		int startDate = getDate();
+
+		// Check if end date is the same or larger than starting date
+		if (endDate >= startDate){
+			//Check if date is correct Length for formatting
+			if (sDate.length() == 8) {
+				//Check if it has a valid month
+				month = Integer.parseInt(sDate.substring(4, 6));
+				if (month <= 12 && month >= 1) {
+					//Check if day is valid
+					day = Integer.parseInt(sDate.substring(6, 8));
+					int lastDayOfMonth = dayInMonth[month - 1];
+					if (day <= lastDayOfMonth && day >= 1) {
+						endDate = Integer.parseInt(sDate);
+					} else {
+						throw new Exception("Invalid Day, does not fall in Month");
+					}
+				} else {
+					throw new Exception("Invalid Month,needs to be month between 1-12");
+				}
+			} else {
+				throw new Exception("Incorrect Format for Date");
+			}
+		} else {
+			throw new Exception("Incorrect End Date, is not equal to or greater than Start Date");
+		}
 		this.endDate = endDate;
 	}
 
@@ -115,8 +142,10 @@ public class RecurringTask extends Task {
 		setDate(startDate);
 	}
 
-	public void setFrequency(int frequency) {
-		// TODO validation on frequency, but with raw input from code.
+	public void setFrequency(int frequency)throws Exception{
+		// frequency doesn't equal 1 or 7, give error
+		if (frequency != 1 && frequency != 7)
+			throw new Exception("Invalid Frequency, needs to be frequency equal to 1(once a day) of 7(every week)");
 		this.frequency = frequency;
 	}
 
