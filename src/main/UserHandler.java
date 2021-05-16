@@ -16,10 +16,9 @@ public class UserHandler {
 	public static void main(String[] args) {
 		PSS pss = new PSS(); // Init PSS
 		UserHandler handler = new UserHandler(pss); // Init the user handler.
-                System.out.println("* Enter One of the Commands Below *");
-                handler.printHelp(); // Show user Options at Start-up
+		System.out.println("* Enter One of the Commands Below *");
+		handler.printHelp(); // Show user Options at Start-up
 		handler.handleUser(); // Start handling user.
-               
 	}
 
 	public UserHandler(PSS pss) {
@@ -55,18 +54,20 @@ public class UserHandler {
 				pss.deleteTask(this);
 				break;
 			case "viewschedule":
-				pss.generateSchedule();
+				pss.generateSchedule(this);
 				break;
 			case "writeschedule":
 				pss.writeSchedule(this);
 				break;
 			case "loadfile":
-				pss.loadSchedule();
+				pss.loadSchedule(this);
 				break;
 			case "writefile":
-				pss.writeSchedule(this);
+				pss.writeWholeSchedule(this);
 				break;
-			case "quit":
+			case "": // Allow the user to make empty newlines.
+				break;
+			case "quit": case "exit": case "logout": case "stop": case "shutdown":
 				running = false;
 				System.out.println("Goodbye!");
 				break;
