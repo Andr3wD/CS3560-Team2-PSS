@@ -232,7 +232,7 @@ public class PSS {
 		timePeriod = handler.getLine();
 
 		// user determines file location
-		System.out.println("Please input a file location to save the whole schedule to:");
+		System.out.println("Please input a file location to save the schedule to:");
 		fileLocation = handler.getLine();
  
 		 switch(timePeriod) {
@@ -312,7 +312,7 @@ public class PSS {
 		for(Task task: someSchedule) {
 			task.print();
 		}
-	
+	}
 	
 	public void writeWholeSchedule(UserHandler userHandler) {
 		System.out.println("Please input a file location to save the whole schedule to:");
