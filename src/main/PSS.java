@@ -244,8 +244,12 @@ public class PSS {
 			 
 			 printSchedule(daySchedule);
 			 
+			 try {
 				DataFile.save(daySchedule, fileLocation);
 				System.out.println("Day schedule has been saved to: " + fileLocation);
+			 }catch (Exception e) {
+			 System.out.println(e.getMessage());
+			 }
 			 break;
 			 
 		 case "Week":
@@ -260,15 +264,17 @@ public class PSS {
 		} 
 			 printSchedule(weeklySchedule);
 			 
+			 try {
 				DataFile.save(weeklySchedule, fileLocation);
 				System.out.println("Weekly schedule has been saved to: " + fileLocation);	
+			 }catch (Exception e) {
+			 System.out.println(e.getMessage());
+			 }
 			 break;
 			 
 		 case "Month":
 			 ArrayList<Task> monthlySchedule = new ArrayList<Task>();
 			 endDate = addDay(startDate, 29);
-			 System.out.println("startDate: " + startDate);
-			 System.out.println("endDate: " + endDate);
 			 // for every task in the schedule ArrayList compare to dates between startDate and endDate...
 			 for(Task task : schedule) {
 				 if((startDate <= task.getDate()) && (task.getDate() <= endDate)) {
@@ -278,8 +284,12 @@ public class PSS {
 		}
 			 printSchedule(monthlySchedule);
 			 
+			 try {
 				DataFile.save(monthlySchedule, fileLocation);
 				System.out.println("Week schedule has been saved to: " + fileLocation);
+			 }catch (Exception e) {
+				 System.out.println(e.getMessage());
+			 }
 
 		 	break;
 		 	
@@ -288,7 +298,9 @@ public class PSS {
 			 break;
 		 }		 
 }
-	
+	/*
+	 * Method to print any given schedule.
+	 */
 	private void printSchedule(ArrayList<Task> someSchedule) {
 		System.out.println("Your schedule: ");
 		for(Task task: someSchedule) {
