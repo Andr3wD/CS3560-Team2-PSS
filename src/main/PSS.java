@@ -339,7 +339,7 @@ public class PSS {
 	public void loadSchedule(UserHandler handler) {
 		System.out.println("Please input a file location to load the whole schedule from:");
 		String fileLocation = handler.getLine();
-		
+
 		ArrayList<Task> loadingSchedule = DataFile.load(fileLocation);
 		if (loadingSchedule != null) {
 			schedule = loadingSchedule;
@@ -804,29 +804,14 @@ public class PSS {
 	 * @return true if found anti-task; False if not anti-task found
 	 */
 	public static boolean hasAntiTask(RecurringTask task, int Date, float StartTime) {
-		//Check that another Anti Task does not already exist here
-		ArrayList<AntiTask> foundAntiTask = new ArrayList<>();
-		ArrayList<Integer> RDays = new ArrayList<>(createDays(task));
-		int recDate;
-
-		for (int i = 0; i < RDays.size(); i++) {
-			recDate = RDays.get(i);
-			for (int x = 0; x < schedule.size(); x++) {
-				if (schedule.get(x).getTaskType() == Task.TaskType.ANTI) {
-					//Get All the Anti-Tasks for RecurringTask
-					if (schedule.get(x).getDate() == recDate && schedule.get(x).getStartTime() == task.getDate()) {
-						foundAntiTask.add((AntiTask) schedule.get(x)); // Add to list of found AntiTasks
-					}
-				}
+		// Parse through the schedule
+		for (Task t : schedule) {
+			// If the type is ANTI, and the date and time match the given date and time
+			if (t.getTaskType() == TaskType.ANTI && t.getDate() == Date && t.getStartTime() == StartTime) {
+				return true;
 			}
 		}
-
-		for (int i = 0; i < foundAntiTask.size(); i++) {
-			if (foundAntiTask.get(i).getDate() == Date && foundAntiTask.get(i).getStartTime() == StartTime) {
-				return true; //Found an antitask for the Passed in Reccuring task that matches the parameters(Date,StartTime) of our new Task
-			}
-		}
-		return false; //No matching AntiTask Found
+		return false;
 	}
 
 	/**
