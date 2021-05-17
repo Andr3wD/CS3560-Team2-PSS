@@ -332,7 +332,7 @@ public class PSS {
 
 		ArrayList<Task> loadingSchedule = DataFile.load(fileLocation);
 		if (loadingSchedule != null) {
-			schedule = loadingSchedule;
+			schedule.addAll(loadingSchedule);
 		} else {
 			System.out.println("Error loading schedule from file.");
 		}
@@ -807,7 +807,7 @@ public class PSS {
 		// Parse through the schedule
 		for (Task t : schedule) {
 			// If the type is ANTI, and the date and time match the given date and time
-			if (t.getTaskType() == TaskType.ANTI && t.getDate() == Date && t.getStartTime() == StartTime) {
+			if (t.getTaskType() == TaskType.ANTI && t.getDate() == Date && t.getStartTime() == task.getStartTime()) {
 				return true;
 			}
 		}
