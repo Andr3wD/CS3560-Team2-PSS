@@ -81,7 +81,7 @@ public class RecurringTask extends Task {
 				System.out.println("Incorrect Format, Please enter a new date (YYYYMMDD)");
 				sDate = handler.getLine();
 			}
-		}while(!valid && date>=startDate);
+		}while(!valid && date>startDate);
 
 		this.endDate=date;
 	}
@@ -113,7 +113,7 @@ public class RecurringTask extends Task {
 		int startDate = getDate();
 
 		// Check if end date is the same or larger than starting date
-		if (endDate >= startDate){
+		if (endDate > startDate){
 			//Check if date is correct Length for formatting
 			if (sDate.length() == 8) {
 				//Check if it has a valid month
