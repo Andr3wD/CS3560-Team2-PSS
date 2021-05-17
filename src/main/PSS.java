@@ -317,9 +317,13 @@ public class PSS {
 		}
 	}
 
-	public void writeWholeSchedule(UserHandler userHandler) {
+	/**
+	 * Writes the whole PSS schedule ArrayList to a file location provided by the user.
+	 * @param userHandler
+	 */
+	public void writeWholeSchedule(UserHandler handler) {
 		System.out.println("Please input a file location to save the whole schedule to:");
-		String fileLocation = userHandler.getLine();
+		String fileLocation = handler.getLine();
 		try {
 			DataFile.save(schedule, fileLocation);
 			System.out.println("Schedule has been saved to: " + fileLocation);
@@ -328,8 +332,15 @@ public class PSS {
 		}
 	}
 
+	/**
+	 * Loads the user provided file location JSON schedule file into the PSS schedule, all while verifying the schedule.
+	 * @param handler
+	 */
 	public void loadSchedule(UserHandler handler) {
-		ArrayList<Task> loadingSchedule = DataFile.load(handler);
+		System.out.println("Please input a file location to load the whole schedule from:");
+		String fileLocation = handler.getLine();
+		
+		ArrayList<Task> loadingSchedule = DataFile.load(fileLocation);
 		if (loadingSchedule != null) {
 			schedule = loadingSchedule;
 		} else {

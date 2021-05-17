@@ -21,12 +21,8 @@ public class DataFile {
 	 * @param handler
 	 * @return
 	 */
-	public static ArrayList<Task> load(UserHandler handler) {
-		// TODO TEST
+	public static ArrayList<Task> load(String filePath) {
 		ArrayList<Task> output = new ArrayList<>();
-
-		System.out.println("Please input a file location for the saved schedule JSON file.");
-		String filePath = handler.getLine();
 
 		try {
 			File file = new File(filePath); // Open file at filePath.
@@ -65,7 +61,7 @@ public class DataFile {
 					return null;
 				}
 				output.add(newTask);
-				System.out.println("Task has been created.");
+				System.out.println("Task: " + newTask.getName() + " has been loaded into memory.");
 			}
 
 			fStream.close();
@@ -82,6 +78,7 @@ public class DataFile {
 		} catch (Exception e) {
 			System.out.println(
 					"Schedule JSON file doesn't follow format, or there was another problem loading the schedule.");
+			System.out.println(e.getMessage());
 			return null;
 		}
 
