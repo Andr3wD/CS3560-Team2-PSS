@@ -2,7 +2,6 @@ package main;
 
 import java.util.ArrayList;
 
-
 /**
  *
  */
@@ -11,7 +10,6 @@ public class PSS {
 	////////////////////////Main Function Methods///////////////////////////////////////
 
 	public static ArrayList<Task> schedule = new ArrayList<Task>();
-		
 
 	/**
 	 * Creates a new task, asking each new Task to figure out the user input
@@ -20,8 +18,8 @@ public class PSS {
 	 * @param handler
 	 */
 	public void createTask(UserHandler handler) {
-		System.out.println("Please input a task type from the following options:\n" +
-				"- Class\n- Study\n- Sleep\n- Exercise\n- Work\n- Meal\n- Cancellation\n- Visit\n- Shopping\n- Appointment");
+		System.out.println("Please input a task type from the following options:\n"
+				+ "- Class\n- Study\n- Sleep\n- Exercise\n- Work\n- Meal\n- Cancellation\n- Visit\n- Shopping\n- Appointment");
 		String type = handler.getLine();
 
 		Task newTask; // Declare shell task.
@@ -103,11 +101,11 @@ public class PSS {
 
 					if (targetTask.getTaskType() == Task.TaskType.RECURRING) {
 						//Options for Recurring task
-						
+
 						deleteAntiTasks(targetTask);
 						schedule.remove(i);
 						System.out.print(taskName + " Has been deleted scuessfully");
-						
+
 						return;
 					} else if (targetTask.getTaskType() == Task.TaskType.ANTI) {
 						if (!checkForConflicts((AntiTask) targetTask)) {
@@ -154,7 +152,7 @@ public class PSS {
 		System.out.println("Current attributes for the task:");
 		targetTask.print();
 		ArrayList<Task> oldSchedule = new ArrayList<Task>(schedule); // Temporary schedule to hold the schedule prior to any changes
-		
+
 		// If the task being edited is recurring, then prompt the user
 		// that all anti-tasks will be deleted on edit
 		if (targetTask.getTaskType() == Task.TaskType.RECURRING) {
@@ -169,7 +167,7 @@ public class PSS {
 				}
 			}
 		}
-		
+
 		int initialSize = schedule.size(); // Variable to hold schedule size prior to changes
 
 		// Remove the task to be edited and call createTask to simulate editing a task
@@ -189,7 +187,7 @@ public class PSS {
 			return;
 		}
 		Task temp;
-		
+
 		// TODO replace with newTaskOverlapCheck().
 
 		// Loop through the rest of the schedule to check every task for overlapping
@@ -212,21 +210,21 @@ public class PSS {
 
 	}
 
-
 	/**
 	 * Method to write daily, weekly, or monthly schedule determined by the user, to a file.
 	 * @param handler
 	 */
-	public void writeSchedule(UserHandler handler)  {
+	public void writeSchedule(UserHandler handler) {
 		int startDate;
 		int endDate;
 		String fileLocation = null;
 		String timePeriod = null;
 
 		// ask user for starting date
-		System.out.println("Hello! Please enter starting date for what day, week, or month you want the schedule for. (YYYYMMDD)");
+		System.out.println(
+				"Hello! Please enter starting date for what day, week, or month you want the schedule for. (YYYYMMDD)");
 		startDate = Integer.parseInt(handler.getLine());
-		 
+
 		// user determines schedule for the day, week, or month
 		System.out.println("Day, Week, Month");
 		timePeriod = handler.getLine();
@@ -234,86 +232,87 @@ public class PSS {
 		// user determines file location
 		System.out.println("Please input a file location to save the schedule to:");
 		fileLocation = handler.getLine();
- 
-		 switch(timePeriod) {
-		 case "Day":
-			 ArrayList<Task> daySchedule = new ArrayList<Task>();	 
-			 // for every task in the schedule ArrayList compare to given date
-			 for(Task task : schedule) {
+
+		switch (timePeriod) {
+		case "Day":
+			ArrayList<Task> daySchedule = new ArrayList<Task>();
+			// for every task in the schedule ArrayList compare to given date
+			for (Task task : schedule) {
 				// search for tasks with that day
-				 if(startDate == task.getDate()) {
-					 // add that task to daySchedule
+				if (startDate == task.getDate()) {
+					// add that task to daySchedule
 					daySchedule.add(task);
 					//task.print();
-				 }		 
+				}
 			}
-			 
-			 printSchedule(daySchedule);
-			 
-			 try {
+
+			printSchedule(daySchedule);
+
+			try {
 				DataFile.save(daySchedule, fileLocation);
 				System.out.println("Day schedule has been saved to: " + fileLocation);
-			 }catch (Exception e) {
-			 System.out.println(e.getMessage());
-			 }
-			 break;
-			 
-		 case "Week":
-			 ArrayList<Task> weeklySchedule = new ArrayList<Task>();
-			 endDate = addDay(startDate, 6);
-			 // for every task in the schedule ArrayList compare to dates between startDate and endDate...
-			 for(Task task : schedule) {
-				 if((startDate <= task.getDate()) && (task.getDate() <= endDate)) {
-					 // add tasks between startDate and endDate to a weekly schedule
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+			}
+			break;
+
+		case "Week":
+			ArrayList<Task> weeklySchedule = new ArrayList<Task>();
+			endDate = addDay(startDate, 6);
+			// for every task in the schedule ArrayList compare to dates between startDate and endDate...
+			for (Task task : schedule) {
+				if ((startDate <= task.getDate()) && (task.getDate() <= endDate)) {
+					// add tasks between startDate and endDate to a weekly schedule
 					weeklySchedule.add(task);
-				 }		 
-		} 
-			 printSchedule(weeklySchedule);
-			 
-			 try {
+				}
+			}
+			printSchedule(weeklySchedule);
+
+			try {
 				DataFile.save(weeklySchedule, fileLocation);
-				System.out.println("Weekly schedule has been saved to: " + fileLocation);	
-			 }catch (Exception e) {
-			 System.out.println(e.getMessage());
-			 }
-			 break;
-			 
-		 case "Month":
-			 ArrayList<Task> monthlySchedule = new ArrayList<Task>();
-			 endDate = addDay(startDate, 29);
-			 // for every task in the schedule ArrayList compare to dates between startDate and endDate...
-			 for(Task task : schedule) {
-				 if((startDate <= task.getDate()) && (task.getDate() <= endDate)) {
+				System.out.println("Weekly schedule has been saved to: " + fileLocation);
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+			}
+			break;
+
+		case "Month":
+			ArrayList<Task> monthlySchedule = new ArrayList<Task>();
+			endDate = addDay(startDate, 29);
+			// for every task in the schedule ArrayList compare to dates between startDate and endDate...
+			for (Task task : schedule) {
+				if ((startDate <= task.getDate()) && (task.getDate() <= endDate)) {
 					// add tasks between startDate and endDate to a monthly schedule
 					monthlySchedule.add(task);
+				}
 			}
-		}
-			 printSchedule(monthlySchedule);
-			 
-			 try {
+			printSchedule(monthlySchedule);
+
+			try {
 				DataFile.save(monthlySchedule, fileLocation);
 				System.out.println("Week schedule has been saved to: " + fileLocation);
-			 }catch (Exception e) {
-				 System.out.println(e.getMessage());
-			 }
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+			}
 
-		 	break;
-		 	
-		 default:
-			 System.out.println("Not a valid time period.");
-			 break;
-		 }		 
-}
+			break;
+
+		default:
+			System.out.println("Not a valid time period.");
+			break;
+		}
+	}
+
 	/*
 	 * Method to print any given schedule.
 	 */
 	private void printSchedule(ArrayList<Task> someSchedule) {
 		System.out.println("Your schedule: ");
-		for(Task task: someSchedule) {
+		for (Task task : someSchedule) {
 			task.print();
 		}
 	}
-	
+
 	public void writeWholeSchedule(UserHandler userHandler) {
 		System.out.println("Please input a file location to save the whole schedule to:");
 		String fileLocation = userHandler.getLine();
@@ -491,11 +490,15 @@ public class PSS {
 					foundAntiTask = schedule.get(i);
 
 					//Check that an Anti-task with the same permameters does not exist.
-					if (foundAntiTask.getDate() == date && foundAntiTask.getStartTime() == startTime
-							&& foundAntiTask.getDuration() == durration) {
-						System.out.println("Another Anti-Task, " + foundAntiTask.getName()
-								+ ", already exists for this time slot.");
-						return true;
+					if (foundAntiTask.getDate() == date) {
+
+						// Check time overlap
+						float matchingTaskEnd = foundAntiTask.getStartTime() + foundAntiTask.getDuration();
+						if (checkTimeOverlap(startTime, endTime, foundAntiTask.getStartTime(), matchingTaskEnd)) {
+							System.out.println("Another Anti-Task, " + foundAntiTask.getName()
+									+ ", already exists for this time slot.");
+							return true;
+						}
 					}
 				}
 			}
@@ -507,11 +510,10 @@ public class PSS {
 				if (matchingTask.getTaskType() == Task.TaskType.TRANSIENT) {
 					// Check if in date range
 					if (date == matchingTask.getDate()) {
-						float taskTime = startTime + durration;//for newTask
 
-						//Check if time overlaps
-						if (startTime <= (matchingTask.getStartTime() + matchingTask.getDuration())
-								&& taskTime >= matchingTask.getStartTime()) {
+						// Check time overlap
+						float matchingTaskEnd = matchingTask.getStartTime() + matchingTask.getDuration();
+						if (checkTimeOverlap(startTime, endTime, matchingTask.getStartTime(), matchingTaskEnd)) {
 							System.out.println(
 									"The Transient Task, " + matchingTask.getName() + ", overlaps with your New Task.");
 							return true;
@@ -522,10 +524,11 @@ public class PSS {
 
 					for (int x = 0; x < matchingTaskDays.size(); x++) {
 						//Check if newTask startDate matches any of the dates from the Recurring task in schedule
-						if (date == matchingTaskDays.get(i)) {
+						if (date == matchingTaskDays.get(x)) {
+
 							//Check if the times on the matching days overlap
-							if (endTime <= (matchingTask.getStartTime() + matchingTask.getDuration())
-									&& endTime >= matchingTask.getStartTime()) {
+							float matchingTaskEnd = matchingTask.getStartTime() + matchingTask.getDuration();
+							if (checkTimeOverlap(startTime, endTime, matchingTask.getStartTime(), matchingTaskEnd)) {
 								//Check if Reccuring task has an anti task for this time and day.
 								if (!hasAntiTask((RecurringTask) matchingTask, newTask.getDate(),
 										newTask.getStartTime())) {
@@ -549,10 +552,11 @@ public class PSS {
 
 					for (int x = 0; x < matchingTaskDays.size(); x++) {
 						//Check if newTask Date List matches the date from the task in schedule
-						if (matchingTask.getDate() == matchingTaskDays.get(i)) {
+						if (matchingTask.getDate() == matchingTaskDays.get(x)) {
+
 							//Check if the times on the matching days overlap
-							if (startTime <= (matchingTask.getStartTime() + matchingTask.getDuration())
-									&& endTime >= matchingTask.getStartTime()) {
+							float matchingTaskEnd = matchingTask.getStartTime() + matchingTask.getDuration();
+							if (checkTimeOverlap(startTime, endTime, matchingTask.getStartTime(), matchingTaskEnd)) {
 								//Since this is a new Reccuring Task it will not have any anti-Tasks and neither will the Transient task we are checking
 								System.out.println("The Transient Task, " + matchingTask.getName()
 										+ ", overlaps with your New Task.");
@@ -572,8 +576,11 @@ public class PSS {
 
 						for (int b = 0; b < matchingTaskDays.size(); b++) {
 							if (newDate == matchingTaskDays.get(b)) {
-								if (endTime >= matchingTask.getStartTime()
-										&& endTime <= (matchingTask.getStartTime() + matchingTask.getDuration())) {
+
+								// Check for time overlap.
+								float matchingTaskEnd = matchingTask.getStartTime() + matchingTask.getDuration();
+								if (checkTimeOverlap(startTime, endTime, matchingTask.getStartTime(),
+										matchingTaskEnd)) {
 									if (!hasAntiTask((RecurringTask) matchingTask, newTask.getDate(),
 											newTask.getStartTime())) {
 										System.out.println("The Reccuring Task " + matchingTask.getName()
@@ -592,13 +599,167 @@ public class PSS {
 	}
 
 	/**
+	 * Used to check if a new Task will overlap with existing task from code.
+	 * 
+	 * Take into consideration the type of task we are trying to create(ANTI,TRANSIENT,RECURRING)
+	 * 
+	 * @param newTask task we want to add
+	 * @return false is there is no overlap. True + give message if there is overlap.
+	 * @throws Exception 
+	 */
+	public static boolean newTaskOverLapCheckCode(Task newTask) throws Exception {
+		int date = newTask.getDate();
+		float durration = newTask.getDuration();
+		float startTime = newTask.getStartTime();
+		float endTime = startTime + durration;
+
+		if (newTask.getTaskType() == Task.TaskType.ANTI) {
+			//Check that another Anti Task does not already exist here
+			Task foundAntiTask;
+
+			for (int i = 0; i < schedule.size(); i++) {
+
+				//Check for other Anti-Tasks in schedule
+				if (schedule.get(i).getTaskType() == Task.TaskType.ANTI) {
+					foundAntiTask = schedule.get(i);
+
+					//Check that an Anti-task with the same permameters does not exist.
+					if (foundAntiTask.getDate() == date) {
+
+						// Check time overlap
+						float matchingTaskEnd = foundAntiTask.getStartTime() + foundAntiTask.getDuration();
+						if (checkTimeOverlap(startTime, endTime, foundAntiTask.getStartTime(), matchingTaskEnd)) {
+							throw new Exception("The Anti-Task Task " + foundAntiTask.getName()
+									+ ", overlaps with Anti-Task: " + newTask.getName());
+						}
+					}
+				}
+			}
+		} else if (newTask.getTaskType() == Task.TaskType.TRANSIENT) {
+			for (int i = 0; i < schedule.size(); i++) {
+				Task matchingTask = schedule.get(i);
+
+				//Check newTask against other Transient Tasks(matchingTask)
+				if (matchingTask.getTaskType() == Task.TaskType.TRANSIENT) {
+					// Check if in date range
+					if (date == matchingTask.getDate()) {
+
+						// Check time overlap
+						float matchingTaskEnd = matchingTask.getStartTime() + matchingTask.getDuration();
+						if (checkTimeOverlap(startTime, endTime, matchingTask.getStartTime(), matchingTaskEnd)) {
+							throw new Exception("The Transient Task " + matchingTask.getName()
+									+ ", overlaps with task: " + newTask.getName());
+						}
+					}
+				} else if (matchingTask.getTaskType() == Task.TaskType.RECURRING) {
+					ArrayList<Integer> matchingTaskDays = createDays((RecurringTask) matchingTask);
+
+					for (int x = 0; x < matchingTaskDays.size(); x++) {
+						//Check if newTask startDate matches any of the dates from the Recurring task in schedule
+						if (date == matchingTaskDays.get(x)) {
+
+							//Check if the times on the matching days overlap
+							float matchingTaskEnd = matchingTask.getStartTime() + matchingTask.getDuration();
+							if (checkTimeOverlap(startTime, endTime, matchingTask.getStartTime(), matchingTaskEnd)) {
+								//Check if Reccuring task has an anti task for this time and day.
+								if (!hasAntiTask((RecurringTask) matchingTask, newTask.getDate(),
+										newTask.getStartTime())) {
+									//If no anti task is found then there is overlap
+									throw new Exception("The Reccuring Task " + matchingTask.getName()
+											+ ", overlaps with task: " + newTask.getName());
+								}
+							}
+						}
+					}
+				}
+			}
+		} else if (newTask.getTaskType() == Task.TaskType.RECURRING) {
+			for (int i = 0; i < schedule.size(); i++) {
+				Task matchingTask = schedule.get(i);
+
+				//Check newTask against other Transient Tasks(matchingTask)
+				if (matchingTask.getTaskType() == Task.TaskType.TRANSIENT) {
+					ArrayList<Integer> matchingTaskDays = createDays((RecurringTask) newTask);
+
+					for (int x = 0; x < matchingTaskDays.size(); x++) {
+						//Check if newTask Date List matches the date from the task in schedule
+						if (matchingTask.getDate() == matchingTaskDays.get(x)) {
+
+							//Check if the times on the matching days overlap
+							float matchingTaskEnd = matchingTask.getStartTime() + matchingTask.getDuration();
+							if (checkTimeOverlap(startTime, endTime, matchingTask.getStartTime(), matchingTaskEnd)) {
+								//Since this is a new Reccuring Task it will not have any anti-Tasks and neither will the Transient task we are checking
+								throw new Exception("The Transient Task " + matchingTask.getName()
+										+ ", overlaps with task: " + newTask.getName());
+							}
+						}
+					}
+				}
+				//check newTask(Recurring) against other Recurring Tasks
+				else if (matchingTask.getTaskType() == Task.TaskType.RECURRING) {
+					ArrayList<Integer> newTaskDays = createDays((RecurringTask) newTask);
+					ArrayList<Integer> matchingTaskDays = createDays((RecurringTask) matchingTask);
+					int newDate;
+
+					for (int a = 0; a < newTaskDays.size(); a++) {
+						newDate = newTaskDays.get(a);
+
+						for (int b = 0; b < matchingTaskDays.size(); b++) {
+							if (newDate == matchingTaskDays.get(b)) {
+
+								// Check for time overlap.
+								float matchingTaskEnd = matchingTask.getStartTime() + matchingTask.getDuration();
+								if (checkTimeOverlap(startTime, endTime, matchingTask.getStartTime(),
+										matchingTaskEnd)) {
+									if (!hasAntiTask((RecurringTask) matchingTask, newTask.getDate(),
+											newTask.getStartTime())) {
+										throw new Exception("The Reccuring Task " + matchingTask.getName()
+												+ ", overlaps with task: " + newTask.getName());
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Checks if start1 and end1 overlap with start2 and end2.
+	 * @param start1
+	 * @param end1
+	 * @param start2
+	 * @param end2
+	 * @return false if no overlap. True if overlap exists.
+	 */
+	public static boolean checkTimeOverlap(float start1, float end1, float start2, float end2) {
+
+		// 1. End time falls within the matching task time frame.
+		// 2. Start time falls within the matching task time frame.
+		// 3. Start time falls before, and end time falls after.
+
+		if (end1 <= end2 && end1 >= start2) {
+			return true;
+		} else if (start1 >= start2 && start1 <= end2) {
+			return true;
+		} else if (start1 <= start2 && end1 >= end2) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
 	 * Check to see if a Recurring task has an antiTask that matches the Parameters of another Task
 	 * @param task Recurring task that we are check if it has antiTasks
 	 * @param Date Date for the other task we are checking
 	 * @param StartTime Start time for the other task we are checking
 	 * @return true if found anti-task; False if not anti-task found
 	 */
-	public boolean hasAntiTask(RecurringTask task, int Date, float StartTime) {
+	public static boolean hasAntiTask(RecurringTask task, int Date, float StartTime) {
 		//Check that another Anti Task does not already exist here
 		ArrayList<AntiTask> foundAntiTask = new ArrayList<>();
 		ArrayList<Integer> RDays = new ArrayList<>(createDays(task));
@@ -630,7 +791,7 @@ public class PSS {
 	 * @param task passed in task
 	 * @return list of days that task occurs
 	 */
-	public ArrayList<Integer> createDays(RecurringTask task) {
+	public static ArrayList<Integer> createDays(RecurringTask task) {
 		ArrayList<Integer> daysScheduled = new ArrayList<>();
 		int startDate = task.getDate();
 		int endDate = task.getEndDate();
@@ -665,7 +826,7 @@ public class PSS {
 	 * @param numOfDaysAdded how many days we are adding to this date (1 or 7)
 	 * @return newDate
 	 */
-	public int addDay(int startDate, int numOfDaysAdded) {
+	public static int addDay(int startDate, int numOfDaysAdded) {
 		int[] dayInMonth = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
 		int newDate = startDate + numOfDaysAdded;

@@ -20,6 +20,8 @@ public class AntiTask extends Task {
 		if (!PSS.isIn(types, tname)) {
 			throw new Exception(String.format("Invalid type %s for Anti-Task.", tname));
 		}
+		// Check for overlap.
+		PSS.newTaskOverLapCheckCode(this);
 	}
 
 	public AntiTask(UserHandler handler, String typeName) {

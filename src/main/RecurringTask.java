@@ -28,6 +28,8 @@ public class RecurringTask extends Task {
 		}
 		setEndDate(end);
 		setFrequency(freq);
+		// Check for overlap.
+		PSS.newTaskOverLapCheckCode(this);
 	}
 
 	public RecurringTask(UserHandler handler, String typeName) {

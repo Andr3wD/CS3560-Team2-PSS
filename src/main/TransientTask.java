@@ -21,6 +21,8 @@ public class TransientTask extends Task {
 		if (!PSS.isIn(types, tname)) {
 			throw new Exception(String.format("Invalid type %s for Transient Task.", tname));
 		}
+		// Check for overlap.
+		PSS.newTaskOverLapCheckCode(this);
 	}
 
 	public TransientTask(UserHandler handler, String typeName) {
