@@ -307,16 +307,6 @@ public class PSS {
 		}
 	}
 
-	/*
-	 * Method to print any given schedule.
-	 */
-	private void printSchedule(ArrayList<Task> someSchedule) {
-		System.out.println("Your schedule: ");
-		for (Task task : someSchedule) {
-			task.print();
-		}
-	}
-
 	/**
 	 * Writes the whole PSS schedule ArrayList to a file location provided by the user.
 	 * @param userHandler
@@ -505,6 +495,16 @@ public class PSS {
 			}
 		}
 		return false;
+	}
+	
+	/*
+	 * Method to print any given schedule.
+	 */
+	private void printSchedule(ArrayList<Task> someSchedule) {
+		System.out.println("Your schedule: ");
+		for (Task task : someSchedule) {
+			task.print();
+		}
 	}
 
 	////////////////////// Overlap Checking Methods//////////////////////
