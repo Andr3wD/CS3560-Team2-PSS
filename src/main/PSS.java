@@ -2,6 +2,8 @@ package main;
 
 import java.util.ArrayList;
 
+import main.Task.TaskType;
+
 /**
  *
  */
@@ -46,6 +48,8 @@ public class PSS {
 		//Check for Overlap
 		if (newTaskOverLapCheck(newTask)) {
 			System.out.println("Task could not be created because it Overlaps with another task.");
+		} else if (newTask.getTaskType() == TaskType.ANTI && !verifyRecurringExists((AntiTask) newTask)) {
+			System.out.println("Anti-task could not be created because it has no associated Recurring task!");
 		} else {
 			schedule.add(newTask); //Add task to schedule
 			newTask.print();  //Print task for user
@@ -463,6 +467,35 @@ public class PSS {
 		return false;
 	}
 
+	/**
+	 * Verifies that the given AntiTask has an associated RecurringTask to cancel out.
+	 * @param task
+	 * @return false if no RecurringTask exists, true if a RecurringTask exists.
+	 */
+	private boolean verifyRecurringExists(AntiTask task) {
+		for (Task t : schedule) {
+			if (t.getTaskType() == TaskType.RECURRING) {
+				// This anti-task needs to fall within that recurring timeslot on that day.
+
+				ArrayList<Integer> dayList = PSS.createDays((RecurringTask) t);
+
+				for (Integer day : dayList) {
+					if (day == task.getDate()) {
+						// This anti-task has the same day as a recurring task.
+
+						// Now verify the timeslot.
+						// Start time and end time must match according to lecture 15.
+						if (task.getStartTime() == t.getStartTime() && task.getDuration() == t.getDuration()) {
+							return true;
+						}
+
+					}
+				}
+			}
+		}
+		return false;
+	}
+
 	////////////////////// Overlap Checking Methods//////////////////////
 
 	/**
@@ -743,7 +776,7 @@ public class PSS {
 
 		if (end1 <= end2 && end1 >= start2) {
 			return true;
-		} else if (start1 >= start2 && start1 <= end2) {
+		} else if (start1 >= start2 && start1 < end2) { // start1 can be == end2
 			return true;
 		} else if (start1 <= start2 && end1 >= end2) {
 			return true;

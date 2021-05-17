@@ -28,7 +28,6 @@ public class AntiTask extends Task {
 		super(handler);
 		setTaskType(Task.TaskType.ANTI);
 		setTypeName(typeName);
-		// TODO do specific validation for anti-tasks.
 	}
 
 }
