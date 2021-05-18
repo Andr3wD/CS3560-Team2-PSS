@@ -93,7 +93,7 @@ public abstract class Task {
 	 * @param duration of task to translate
 	 * @return readable string
 	 */
-	public String durationToHumanReadable(float duration) {
+	public static String durationToHumanReadable(float duration) {
 		int hours = (int) duration; // Store the hour value of the duration
 		double decimal = duration - hours;
 		int minutes = (int) (decimal * 60); // Store the decimal value of duration as minutes
@@ -108,7 +108,7 @@ public abstract class Task {
 	 * @param date of task to translate
 	 * @return formattedDate in MM-DD-YYYY
 	 */
-	public String dateToHumanReadable(int date) {
+	public static String dateToHumanReadable(int date) {
 		String stringDate = String.valueOf(date); // Store the date value as a string
 
 		// Date is initially in form YYYYMMDD, so convert to MM-DD-YYYY
@@ -368,17 +368,26 @@ public abstract class Task {
 		this.date = date;
 	}
 
+	public String getTimeRange() {
+		float endTime = getStartTime() + getDuration();
+		// If our time that we end wraps past midnight, then adjust to show correct time
+		if (endTime >= 24) {
+			endTime = endTime - 24;
+		}
+		return timeToHumanReadable(getStartTime()) + " - " + timeToHumanReadable(endTime);
+	}
+
 	/**
 	 * Print a formatted version of the Task we just created
 	 */
 	public void print() {
 		float endTime = getStartTime() + getDuration();
 		// If our time that we end wraps past midnight, then adjust to show correct time
-		if(endTime >= 24) {
+		if (endTime >= 24) {
 			endTime = endTime - 24;
 		}
 		System.out.println("Name: " + getName() + "\nType: " + getTypeName() + "\nDate: "
-				+ dateToHumanReadable(getDate()) + "\nTime: " + timeToHumanReadable(getStartTime())
-				+ " - " + timeToHumanReadable(endTime) + "\n");
+				+ dateToHumanReadable(getDate()) + "\nTime: " + timeToHumanReadable(getStartTime()) + " - "
+				+ timeToHumanReadable(endTime) + "\n");
 	}
 }
