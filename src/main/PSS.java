@@ -752,7 +752,7 @@ public class PSS {
 	}
 
 	/**
-	 * Checks if start1 and end1 overlap with start2 and end2.
+	 * Checks if start1 and end1 overlap with start2 and end2. Also account for wrap around times
 	 * @param start1
 	 * @param end1
 	 * @param start2
@@ -764,7 +764,15 @@ public class PSS {
 		// 1. End time falls within the matching task time frame.
 		// 2. Start time falls within the matching task time frame.
 		// 3. Start time falls before, and end time falls after.
+                if(end1 > 24.0){
+                    end1 = end1 - 24; //Wrap around time.
+                }
+                
+                if(end2 > 24.0){
+                    end2 = end2 - 24;//Wrap around time.
+                }
 
+                //Check for Overlapping times
 		if (end1 <= end2 && end1 >= start2) {
 			return true;
 		} else if (start1 >= start2 && start1 < end2) { // start1 can be == end2
