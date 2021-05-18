@@ -1,6 +1,7 @@
 package main;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 /**
  *
@@ -204,6 +205,54 @@ public class PSS {
 
 	public void generateSchedule(UserHandler handler) {
 
+		ArrayList<Task> schedule = new ArrayList<Task>();
+
+		//Handler inputs first date
+		System.out.println("Enter An initial date: ");
+		int Task_Initial = handler.getInt();
+		boolean containsTask_Initial;
+		containsTask_Initial = schedule.stream().filter(task -> task.getName().equals(Task_Initial)).findFirst().isPresent();
+
+		
+		//Handler inputs first date
+		System.out.println("Enter the number of dates after the initial date: ");
+		var Task_Final = handler.getInt();
+		
+		//Sorting loop
+		schedule.sort(new Comparator<Task>() {
+		    @Override
+		    public int compare(Task o1, Task o2)
+		    {   
+		    	
+		    	if(o1.getDate() > o2.getDate())
+		    		return 1; //o1 > o2
+		    	
+		    	else if(o1.getDate() == o2.getDate())
+		    	{
+		    		if(o1.getStartTime() > o2.getStartTime())
+		    			return 1; //o1 > o2
+		    		
+		    		else
+			    		return -1; //o2 > o1
+		    	}
+		    		
+		    	else
+		    		return -1; //o2 > o1
+		    }
+		});
+
+		//Prints the task names and the task dates
+		for(Task task: schedule)
+		{
+			//Breaks the loop if task date is greater than number of dates
+			if(task.getDate() >= Task_Initial && task.getDate() <= Task_Final)
+			{
+				System.out.println(task.getName());
+				System.out.println(task.getDate());
+			}
+
+		}		
+		
 	}
 
 	public void writeSchedule(UserHandler handler) {
@@ -243,7 +292,7 @@ public class PSS {
 		for (int i = 0; i < schedule.size(); i++) {
 			if (schedule.get(i).getTaskType() == Task.TaskType.ANTI) {
 				foundAntiTask = schedule.get(i);
-				//Check that an Anti-task with the same permameters does not exist.
+				//Check that an Anti-task with the same parameters does not exist.
 				if (foundAntiTask.getDate() == recurringTask.getDate()
 						&& foundAntiTask.getStartTime() == recurringTask.getStartTime()
 						&& foundAntiTask.getDuration() == recurringTask.getDuration()) {
