@@ -108,11 +108,11 @@ public class PSS {
 
 						deleteAntiTasks(targetTask);
 						schedule.remove(i);
-						System.out.print(taskName + " Has been deleted scuessfully");
+						System.out.print(taskName + " Has been deleted scuessfully" + "\n");
 
 						return;
 					} else if (targetTask.getTaskType() == Task.TaskType.ANTI) {
-						if (!checkForConflicts((AntiTask) targetTask)) {
+						if (!checkForConflicts((AntiTask) targetTask)) { //Need to fix does not detect overlap if antitask is deleted.
 							schedule.remove(i);
 							System.out.println("Anti-Task deleted sucessfully.");
 							return;
@@ -355,7 +355,7 @@ public class PSS {
 				if (foundAntiTask.getDate() == recurringTask.getDate()
 						&& foundAntiTask.getStartTime() == recurringTask.getStartTime()
 						&& foundAntiTask.getDuration() == recurringTask.getDuration()) {
-					System.out.println(" along with its Anti-Tasks.");
+					System.out.println("The Anti-Task: " + foundAntiTask.getName() + " associated with the reccuring task have been deleted. ");
 					schedule.remove(i);
 				}
 			}
@@ -363,9 +363,9 @@ public class PSS {
 	}
 
 	/**
-	 * Checks if any tasks (Transient or Recurring) will overlap if the anti task is deleted. 
-	 * First finds the Corresponding Recurring Task to the AntiTask. 
-	 * When found call Overlap method to check if there is any Overlap with other tasks.
+	 * Checks if any tasks (Transient) will overlap with recurring task if the anti task is deleted. 
+	 * First finds any Transient tasks that fall into the AntiTask. 
+	 * If found output which task would overlap. 
 	 * 
 	 * @param targetTask anti-task that is passed in.
 	 * 
@@ -375,65 +375,22 @@ public class PSS {
 		boolean conflictFound = false;
 		int targetDate = targetTask.getDate();
 		float targetStartTime = targetTask.getStartTime();
-		float targetDuration = targetTask.getDuration();
+		float targetEndTime = targetStartTime + targetTask.getDuration();
 		Task matchingTask;// Task that matches the time frame of Anti task.
 
 		for (int i = 0; i < schedule.size(); i++) {
 			matchingTask = schedule.get(i);
-
-			// find corresponding task.
-			if (matchingTask.getDate() == targetDate
-					&& (targetStartTime + targetDuration) == (matchingTask.getStartTime() + matchingTask.getDuration())
-					&& matchingTask.getTaskType() == Task.TaskType.RECURRING) {
-
-				// Conflict Overlap found
-				if (checkOverlap((RecurringTask) matchingTask)) {
-					return true;
-				}
-			}
-		}
+                        float matchTime = matchingTask.getStartTime() + matchingTask.getDuration();
+                        
+                        if(matchingTask.getTaskType() == TaskType.TRANSIENT){
+                            if(targetDate == matchingTask.getDate() && targetStartTime <= matchTime && matchTime <= targetEndTime){
+                                System.out.println("Could not delete Anti-Task " + targetTask.getName() + ", " + matchingTask.getName() + " would conflict with the Recuring task.");
+                                conflictFound = true;
+                            }
+                        }
+		}//end for
 
 		return conflictFound;
-	}
-
-	/**
-	 * Check if there is a date and time overlap between other tasks in the schedule with this recurring task. 
-	 * If conflicts found put them in a list and print them out.
-	 * 
-	 * @return false if no overlaps were found. True if Overlaps found
-	 */
-	public static boolean checkOverlap(RecurringTask recurringTask) {
-		ArrayList<Task> conflicts = new ArrayList<Task>();
-		boolean overlapFound = false;
-		int startDate = ((RecurringTask) recurringTask).getDate();
-		int endDate = ((RecurringTask) recurringTask).getEndDate();
-		float startTime = recurringTask.getStartTime();
-		float endTime = recurringTask.getStartTime() + recurringTask.getDuration();
-
-		for (int i = 0; i < schedule.size(); i++) {
-			// Check if in date range
-			if (startDate < schedule.get(i).getDate() && endDate > schedule.get(i).getDate()) {
-				float taskTime = schedule.get(i).getStartTime() + schedule.get(i).getDuration();
-
-				// Check if time overlap
-				if (startTime < taskTime && endTime > taskTime) {
-					conflicts.add(schedule.get(i));// Conflict found add to list
-					overlapFound = true;
-				}
-			}
-		}
-
-		// If Overlap found print tasks causing conflicts
-		if (overlapFound) {
-			System.out.println("Cannot be delete becaouse of conflicting tasks: ");
-
-			// Print list of conflicting tasks
-			for (int i = 0; i < conflicts.size(); i++) {
-				System.out.print(conflicts.get(i).getName() + " , ");
-			}
-		}
-
-		return overlapFound;
 	}
 
 	//////////////////////// TOOLS ////////////////////////
