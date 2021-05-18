@@ -583,9 +583,7 @@ public class PSS {
 	 */
 	public boolean newTaskOverLapCheck(Task newTask) {
 		int date = newTask.getDate();
-		float durration = newTask.getDuration();
-		float startTime = newTask.getStartTime();
-		float endTime = startTime + durration;
+
 
 		if (newTask.getTaskType() == Task.TaskType.ANTI) {
 			//Check that another Anti Task does not already exist here
@@ -601,8 +599,7 @@ public class PSS {
 					if (foundAntiTask.getDate() == date) {
 
 						// Check time overlap
-						float matchingTaskEnd = foundAntiTask.getStartTime() + foundAntiTask.getDuration();
-						if (checkTimeOverlap(startTime, endTime, foundAntiTask.getStartTime(), matchingTaskEnd)) {
+						if (checkTimeOverlap(newTask, foundAntiTask)) {
 							System.out.println("Another Anti-Task, " + foundAntiTask.getName()
 									+ ", already exists for this time slot.");
 							return true;
@@ -617,11 +614,10 @@ public class PSS {
 				//Check newTask against other Transient Tasks(matchingTask)
 				if (matchingTask.getTaskType() == Task.TaskType.TRANSIENT) {
 					// Check if in date range
-					if (date == matchingTask.getDate()) {
+					if (date == matchingTask.getDate() || addDay(matchingTask.getDate(), 1) == date || addDay(date, 1) == matchingTask.getDate()) {
 
 						// Check time overlap
-						float matchingTaskEnd = matchingTask.getStartTime() + matchingTask.getDuration();
-						if (checkTimeOverlap(startTime, endTime, matchingTask.getStartTime(), matchingTaskEnd)) {
+						if (checkTimeOverlap(newTask, matchingTask)) {
 							System.out.println(
 									"The Transient Task, " + matchingTask.getName() + ", overlaps with your New Task.");
 							return true;
@@ -632,11 +628,10 @@ public class PSS {
 
 					for (int x = 0; x < matchingTaskDays.size(); x++) {
 						//Check if newTask startDate matches any of the dates from the Recurring task in schedule
-						if (date == matchingTaskDays.get(x)) {
+						if (date == matchingTaskDays.get(x) || addDay(matchingTask.getDate(), 1) == date || addDay(date, 1) == matchingTask.getDate()) {
 
 							//Check if the times on the matching days overlap
-							float matchingTaskEnd = matchingTask.getStartTime() + matchingTask.getDuration();
-							if (checkTimeOverlap(startTime, endTime, matchingTask.getStartTime(), matchingTaskEnd)) {
+							if (checkTimeOverlap(newTask, matchingTask)) {
 								//Check if Reccuring task has an anti task for this time and day.
 								if (!hasAntiTask((RecurringTask) matchingTask, newTask.getDate())) {
 									//If no anti task is found then there is overlap
@@ -659,11 +654,10 @@ public class PSS {
 
 					for (int x = 0; x < matchingTaskDays.size(); x++) {
 						//Check if newTask Date List matches the date from the task in schedule
-						if (matchingTask.getDate() == matchingTaskDays.get(x)) {
+						if (matchingTask.getDate() == matchingTaskDays.get(x) || addDay(matchingTask.getDate(), 1) == matchingTaskDays.get(x) || addDay(matchingTaskDays.get(x), 1) == matchingTask.getDate()) {
 
 							//Check if the times on the matching days overlap
-							float matchingTaskEnd = matchingTask.getStartTime() + matchingTask.getDuration();
-							if (checkTimeOverlap(startTime, endTime, matchingTask.getStartTime(), matchingTaskEnd)) {
+							if (checkTimeOverlap(newTask, matchingTask)) {
 								//Since this is a new Reccuring Task it will not have any anti-Tasks and neither will the Transient task we are checking
 								System.out.println("The Transient Task, " + matchingTask.getName()
 										+ ", overlaps with your New Task.");
@@ -682,12 +676,10 @@ public class PSS {
 						newDate = newTaskDays.get(a);
 
 						for (int b = 0; b < matchingTaskDays.size(); b++) {
-							if (newDate == matchingTaskDays.get(b)) {
+							if (newDate == matchingTaskDays.get(b) || addDay(matchingTaskDays.get(b), 1) == newDate || addDay(newDate, 1) == matchingTaskDays.get(b)) {
 
 								// Check for time overlap.
-								float matchingTaskEnd = matchingTask.getStartTime() + matchingTask.getDuration();
-								if (checkTimeOverlap(startTime, endTime, matchingTask.getStartTime(),
-										matchingTaskEnd)) {
+								if (checkTimeOverlap(newTask, matchingTask)) {
 									if (!hasAntiTask((RecurringTask) matchingTask, newTask.getDate())) {
 										System.out.println("The Reccuring Task " + matchingTask.getName()
 												+ ", overlaps with your new task.");
@@ -715,9 +707,6 @@ public class PSS {
 	 */
 	public static boolean newTaskOverLapCheckCode(Task newTask) throws Exception {
 		int date = newTask.getDate();
-		float durration = newTask.getDuration();
-		float startTime = newTask.getStartTime();
-		float endTime = startTime + durration;
 
 		if (newTask.getTaskType() == Task.TaskType.ANTI) {
 			//Check that another Anti Task does not already exist here
@@ -733,8 +722,7 @@ public class PSS {
 					if (foundAntiTask.getDate() == date) {
 
 						// Check time overlap
-						float matchingTaskEnd = foundAntiTask.getStartTime() + foundAntiTask.getDuration();
-						if (checkTimeOverlap(startTime, endTime, foundAntiTask.getStartTime(), matchingTaskEnd)) {
+						if (checkTimeOverlap(newTask, foundAntiTask)) {
 							throw new Exception("The Anti-Task Task " + foundAntiTask.getName()
 									+ ", overlaps with Anti-Task: " + newTask.getName());
 						}
@@ -751,8 +739,7 @@ public class PSS {
 					if (date == matchingTask.getDate()) {
 
 						// Check time overlap
-						float matchingTaskEnd = matchingTask.getStartTime() + matchingTask.getDuration();
-						if (checkTimeOverlap(startTime, endTime, matchingTask.getStartTime(), matchingTaskEnd)) {
+						if (checkTimeOverlap(newTask, matchingTask)) {
 							throw new Exception("The Transient Task " + matchingTask.getName()
 									+ ", overlaps with task: " + newTask.getName());
 						}
@@ -765,8 +752,7 @@ public class PSS {
 						if (date == matchingTaskDays.get(x)) {
 
 							//Check if the times on the matching days overlap
-							float matchingTaskEnd = matchingTask.getStartTime() + matchingTask.getDuration();
-							if (checkTimeOverlap(startTime, endTime, matchingTask.getStartTime(), matchingTaskEnd)) {
+							if (checkTimeOverlap(newTask, matchingTask)) {
 								//Check if Reccuring task has an anti task for this time and day.
 								if (!hasAntiTask((RecurringTask) matchingTask, newTask.getDate())) {
 									//If no anti task is found then there is overlap
@@ -791,8 +777,7 @@ public class PSS {
 						if (matchingTask.getDate() == matchingTaskDays.get(x)) {
 
 							//Check if the times on the matching days overlap
-							float matchingTaskEnd = matchingTask.getStartTime() + matchingTask.getDuration();
-							if (checkTimeOverlap(startTime, endTime, matchingTask.getStartTime(), matchingTaskEnd)) {
+							if (checkTimeOverlap(newTask, matchingTask)) {
 								//Since this is a new Reccuring Task it will not have any anti-Tasks and neither will the Transient task we are checking
 								throw new Exception("The Transient Task " + matchingTask.getName()
 										+ ", overlaps with task: " + newTask.getName());
@@ -813,9 +798,7 @@ public class PSS {
 							if (newDate == matchingTaskDays.get(b)) {
 
 								// Check for time overlap.
-								float matchingTaskEnd = matchingTask.getStartTime() + matchingTask.getDuration();
-								if (checkTimeOverlap(startTime, endTime, matchingTask.getStartTime(),
-										matchingTaskEnd)) {
+								if (checkTimeOverlap(newTask, matchingTask)) {
 									if (!hasAntiTask((RecurringTask) matchingTask, newTask.getDate())) {
 										throw new Exception("The Reccuring Task " + matchingTask.getName()
 												+ ", overlaps with task: " + newTask.getName());
@@ -839,26 +822,39 @@ public class PSS {
 	 * @param end2
 	 * @return false if no overlap. True if overlap exists.
 	 */
-	public static boolean checkTimeOverlap(float start1, float end1, float start2, float end2) {
+	public static boolean checkTimeOverlap(Task t1, Task t2) {
 
 		// 1. End time falls within the matching task time frame.
 		// 2. Start time falls within the matching task time frame.
 		// 3. Start time falls before, and end time falls after.
-		if (end1 > 24.0) {
-			end1 = end1 - 24; //Wrap around time.
-		}
+		float start1 = t1.getStartTime();
+		float end1 = start1 + t1.getDuration();
 
-		if (end2 > 24.0) {
-			end2 = end2 - 24;//Wrap around time.
+		float start2 = t2.getStartTime();
+		float end2 = start2 + t2.getDuration();
+		if (t1.getDate() == t2.getDate()) {
+			//Check for Overlapping times
+			if (end1 <= end2 && end1 >= start2) {
+				return true;
+			} else if (start1 >= start2 && start1 < end2) { // start1 can be == end2
+				return true;
+			} else if (start1 <= start2 && end1 >= end2) {
+				return true;
+			}
 		}
-
-		//Check for Overlapping times
-		if (end1 <= end2 && end1 >= start2) {
-			return true;
-		} else if (start1 >= start2 && start1 < end2) { // start1 can be == end2
-			return true;
-		} else if (start1 <= start2 && end1 >= end2) {
-			return true;
+		
+		// Quick and dirty. This reallly isn't preferable.
+		if (t1.getDate() < t2.getDate() && end1 > 24.0) { // Check if this task wraps over any other task in the next day.
+			float nextDayEnd = (float) (end1-24.0);
+			if (nextDayEnd > start2) {
+				return true;
+			}
+			
+		} else if (t1.getDate() > t2.getDate() && end2 > 24.0) { // Check if the task we're comparing against wraps over this task
+			float nextDayEnd = (float) (end2-24.0);
+			if (nextDayEnd > start1) {
+				return true;
+			}
 		}
 
 		return false;
