@@ -5,6 +5,7 @@ package main;
  */
 public class AntiTask extends Task {
 	public static String[] types = { "Cancellation" };
+        private String reccuringTaskName;
 
 	/**
 	 *
@@ -30,4 +31,11 @@ public class AntiTask extends Task {
 		setTypeName(typeName);
 	}
 
+        public String getReccuringTaskName(){
+            return reccuringTaskName;
+        }
+        
+        public void setReccuringTaskName(String name){
+            this.reccuringTaskName = name;
+        }
 }

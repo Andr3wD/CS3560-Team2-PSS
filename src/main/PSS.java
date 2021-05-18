@@ -363,7 +363,7 @@ public class PSS {
 	}
 
 	/**
-	 * Checks if any tasks (Transient) will overlap with recurring task if the anti task is deleted. 
+	 * Checks if any tasks (Transient or Recurring) will overlap with recurring task if the anti task is deleted. 
 	 * First finds any Transient tasks that fall into the AntiTask. 
 	 * If found output which task would overlap. 
 	 * 
@@ -372,20 +372,42 @@ public class PSS {
 	 * @return false if no conflicts. True and print conflicting task if found
 	 */
 	public static boolean checkForConflicts(AntiTask targetTask) {
+                //Remove the Associated Reccuring task from the list.
+                ArrayList <Task> copyOfSchdule = schedule;
+                for(int a = 0; a < copyOfSchdule.size(); a++){
+                    if(copyOfSchdule.get(a).getName().equals(targetTask.getReccuringTaskName())){
+                        copyOfSchdule.remove(a);
+                    }
+                }
+                
 		boolean conflictFound = false;
 		int targetDate = targetTask.getDate();
 		float targetStartTime = targetTask.getStartTime();
 		float targetEndTime = targetStartTime + targetTask.getDuration();
 		Task matchingTask;// Task that matches the time frame of Anti task.
+                ArrayList Days;
 
-		for (int i = 0; i < schedule.size(); i++) {
-			matchingTask = schedule.get(i);
+		for (int i = 0; i < copyOfSchdule.size(); i++) {
+			matchingTask = copyOfSchdule.get(i);
                         float matchTime = matchingTask.getStartTime() + matchingTask.getDuration();
                         
                         if(matchingTask.getTaskType() == TaskType.TRANSIENT){
                             if(targetDate == matchingTask.getDate() && targetStartTime <= matchTime && matchTime <= targetEndTime){
                                 System.out.println("Could not delete Anti-Task " + targetTask.getName() + ", " + matchingTask.getName() + " would conflict with the Recuring task.");
                                 conflictFound = true;
+                            }
+                        }
+                        else if(matchingTask.getTaskType() == TaskType.RECURRING){
+                            Days = createDays((RecurringTask) matchingTask);
+                            
+                            for(int x = 0; x < Days.size(); x++){
+                                if(Days.get(x).equals(targetDate)){
+                                    if(targetStartTime <= matchTime && matchTime <= targetEndTime){
+                                        System.out.println("Could not delete Anti-Task " + targetTask.getName() + ", " + matchingTask.getName() + " would conflict with the Recuring task.");
+                                        conflictFound = true;
+                                    }
+                                }
+                            
                             }
                         }
 		}//end for
@@ -444,6 +466,7 @@ public class PSS {
 						// Now verify the timeslot.
 						// Start time and end time must match according to lecture 15.
 						if (task.getStartTime() == t.getStartTime() && task.getDuration() == t.getDuration()) {
+                                                        task.setReccuringTaskName(t.getName()); //Save the name of the associated Reccuring task to the Anti-task
 							return true;
 						}
 
