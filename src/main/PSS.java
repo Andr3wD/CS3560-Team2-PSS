@@ -222,9 +222,25 @@ public class PSS {
 		System.out.println("Enter the initial date: ");
 		int Task_Initial = handler.getInt();
 
+		// Validate that the Task_Initial date is a legitimate date
+		try {
+			validateDate(Task_Initial);
+		} catch (Exception e) {
+			System.out.println(e.getMessage() + " Returning to menu.");
+			return;
+		}
+
 		//Handler inputs first date
 		System.out.println("Enter the end date: ");
 		int Task_Final = handler.getInt();
+
+		// Validate that the Task_Final date is a legitimate date
+		try {
+			validateDate(Task_Final);
+		} catch (Exception e) {
+			System.out.println(e.getMessage() + " Returning to menu.");
+			return;
+		}
 
 		if (Task_Final <= Task_Initial) {
 			System.out.println("The end date must be larger than the initial date. Returning to menu.");
@@ -318,6 +334,27 @@ public class PSS {
 		System.out.println("Please input a file location to save the schedule to:");
 		fileLocation = handler.getLine();
 
+		// Sort according to project requirements.
+		schedule.sort(new Comparator<Task>() {
+			@Override
+			public int compare(Task o1, Task o2) {
+				if (o1.getDate() > o2.getDate()) {
+					return 1;
+				} else if (o1.getDate() < o2.getDate()) {
+					return -1;
+				} else {
+					if (o1.getStartTime() > o2.getStartTime()) {
+						return 1;
+					} else if (o1.getStartTime() < o2.getStartTime()) {
+						return -1;
+					} else {
+						return 0;
+					}
+				}
+			}
+
+		});
+
 		switch (timePeriod) {
 		case "Day":
 			ArrayList<Task> daySchedule = new ArrayList<Task>();
@@ -375,7 +412,7 @@ public class PSS {
 
 			try {
 				DataFile.save(monthlySchedule, fileLocation);
-				System.out.println("Week schedule has been saved to: " + fileLocation);
+				System.out.println("Month schedule has been saved to: " + fileLocation);
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
 			}
@@ -889,6 +926,41 @@ public class PSS {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Validates that the date is a date that exists.
+	 * @param date
+	 * @return
+	 * @throws Exception
+	 */
+	public static boolean validateDate(int date) throws Exception {
+		String sDate = String.valueOf(date);
+		int[] dayInMonth = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+		int month;
+		int day;
+
+		//Check if date is correct Length for formatting
+		if (sDate.length() == 8) {
+			//Check if it has a valid month
+			month = Integer.parseInt(sDate.substring(4, 6));
+			if (month <= 12 && month >= 1) {
+				//Check if day is valid
+				day = Integer.parseInt(sDate.substring(6, 8));
+
+				int lastDayOfMonth = dayInMonth[month - 1];
+				if (day <= lastDayOfMonth && day >= 1) {
+					date = Integer.parseInt(sDate);
+				} else {
+					throw new Exception("Invalid Day, does not fall within the Month.");
+				}
+			} else {
+				throw new Exception("Invalid Month, month " + month + " does not exist.");
+			}
+		} else {
+			throw new Exception("Incorrect date format.");
+		}
+		return true;
 	}
 
 	/**

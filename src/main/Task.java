@@ -242,7 +242,7 @@ public abstract class Task {
 				if (day <= lastDayOfMonth && day >= 1) {
 					date = Integer.parseInt(sDate);
 				} else {
-					throw new Exception("Invalid Day, does not fall within the Task.");
+					throw new Exception("Invalid Day, does not fall within the Month.");
 				}
 			} else {
 				throw new Exception("Invalid Month, month " + month + " does not exist.");
