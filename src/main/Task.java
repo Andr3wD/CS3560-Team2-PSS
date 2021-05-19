@@ -6,11 +6,8 @@ import java.time.format.DateTimeFormatter;
 
 import org.json.JSONObject;
 
-/**
- *
- */
 public abstract class Task {
-	private String name; // Name of task
+	private String name;
 	private float startTime;
 	private float duration;
 	private int date;
@@ -22,12 +19,14 @@ public abstract class Task {
 	}
 
 	/**
-	 *
+	 * Constructs a Task in a direct manner with errors for any input problems.
+	 * @param name
 	 * @param startTime
 	 * @param duration
 	 * @param date
 	 * @param tname
-	 * @throws Exception 
+	 * @param taskType
+	 * @throws Exception
 	 */
 	public Task(String name, float startTime, float duration, int date, String tname, TaskType taskType)
 			throws Exception {
@@ -40,6 +39,10 @@ public abstract class Task {
 		setTaskType(taskType);
 	}
 
+	/**
+	 * Constructs an Task with values obtained from the user, all while verifying them.
+	 * @param handler
+	 */
 	public Task(UserHandler handler) {
 		System.out.println("Please input a unique name for the task.");
 		setName(handler);
@@ -53,7 +56,7 @@ public abstract class Task {
 		System.out.println("Please enter a start date:");
 		setDate(handler);
 
-		// TODO validate no overlap with other tasks here.
+		// Validation at a schedule level is done in PSS.
 	}
 
 	/**
@@ -122,7 +125,7 @@ public abstract class Task {
 	 * This returns a JSONObject representing this class and its values, to then be
 	 * written directly to a file.
 	 * 
-	 * @return
+	 * @return a JSONObject representing this Task, in the proper JSON format.
 	 */
 	public JSONObject toJson() {
 		// Make a JSON object and put the values in it.
@@ -163,11 +166,15 @@ public abstract class Task {
 
 	///////////////////////// Program Setters /////////////////////////
 
+	/**
+	 * A direct setter for the name variable.
+	 * @param name the name for this Task.
+	 * @throws Exception if the task name already exists in PSS and that task isn't this.
+	 */
 	public void setName(String name) throws Exception {
 		// Check if task name already exists.
 		Task existingTask = PSS.getTaskByName(name);
 		if (existingTask != null && existingTask == this) {
-			// TODO lookat. Depends on how edit task is implemented.
 			// If task name already exists, and the task with the name is this task, then we're probably just editing it.
 			this.name = name;
 		} else if (existingTask != null && existingTask != this) {
@@ -179,6 +186,11 @@ public abstract class Task {
 		}
 	}
 
+	/**
+	 * A direct setter for the startTime variable.
+	 * @param startTime the startTime for this Task.
+	 * @throws Exception if the startTime isn't within 0-23.75 range or the startTime isn't within 15 minute increments.
+	 */
 	public void setStartTime(float startTime) throws Exception {
 		///Make sure the given time is within 24 hours.
 		if (!(startTime <= 23.75 && startTime >= 0.0)) {
@@ -191,6 +203,11 @@ public abstract class Task {
 		this.startTime = startTime;
 	}
 
+	/**
+	 * A direct setter for the duration variable.
+	 * @param duration the duration for this Task.
+	 * @throws Exception if the duration isn't within 0.25-23.75 range or the duration isn't within 15 minute increments.
+	 */
 	public void setDuration(float duration) throws Exception {
 		if (!(duration <= 23.75 && duration >= 0.25)) {
 			throw new Exception("Task duration is not within 23.75 - 0.25 hour range");
@@ -202,6 +219,11 @@ public abstract class Task {
 		this.duration = duration;
 	}
 
+	/**
+	 * A direct setter for the date variable.
+	 * @param date the date for this Task.
+	 * @throws Exception if the date isn't in proper format (YYYYMMDD)
+	 */
 	public void setDate(int date) throws Exception {
 		String sDate = String.valueOf(date);
 		int[] dayInMonth = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
@@ -368,6 +390,9 @@ public abstract class Task {
 		this.date = date;
 	}
 
+	/**
+	 * @return a human readable String of the form 'start - end'
+	 */
 	public String getTimeRange() {
 		float endTime = getStartTime() + getDuration();
 		// If our time that we end wraps past midnight, then adjust to show correct time
@@ -378,7 +403,7 @@ public abstract class Task {
 	}
 
 	/**
-	 * Print a formatted version of the Task we just created
+	 * Print a formatted version of this Task.
 	 */
 	public void print() {
 		float endTime = getStartTime() + getDuration();

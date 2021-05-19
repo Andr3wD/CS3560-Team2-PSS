@@ -8,12 +8,13 @@ public class TransientTask extends Task {
 	public static String[] types = { "Visit", "Shopping", "Appointment" };
 
 	/**
-	 *
+	 * Constructs a TransientTask in a direct manner with errors for any input problems.
+	 * @param name
 	 * @param startTime
 	 * @param duration
 	 * @param date
 	 * @param tname
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public TransientTask(String name, float startTime, float duration, int date, String tname) throws Exception {
 		super(name, startTime, duration, date, tname, Task.TaskType.TRANSIENT);
@@ -25,6 +26,11 @@ public class TransientTask extends Task {
 		PSS.newTaskOverLapCheckCode(this);
 	}
 
+	/**
+	 * Constructs a TransientTask with values obtained from the user, all while verifying them.
+	 * @param handler
+	 * @param typeName
+	 */
 	public TransientTask(UserHandler handler, String typeName) {
 		super(handler);
 		setTaskType(Task.TaskType.TRANSIENT);

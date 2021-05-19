@@ -67,7 +67,11 @@ public class UserHandler {
 				break;
 			case "": // Allow the user to make empty newlines.
 				break;
-			case "quit": case "exit": case "logout": case "stop": case "shutdown":
+			case "quit":
+			case "exit":
+			case "logout":
+			case "stop":
+			case "shutdown":
 				running = false;
 				System.out.println("Goodbye!");
 				break;
@@ -111,6 +115,7 @@ public class UserHandler {
 	 */
 	private void printHelp() {
 		System.out.print("Commands: ");
-		System.out.println("createtask, edittask, viewtask, deletetask, viewschedule, writeschedule, loadfile, writefile.");
+		System.out.println(
+				"createtask, edittask, viewtask, deletetask, viewschedule, writeschedule, loadfile, writefile.");
 	}
 }

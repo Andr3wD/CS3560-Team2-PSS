@@ -3,7 +3,6 @@ package main;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Map.Entry;
 
 import main.Task.TaskType;
 
@@ -272,7 +271,8 @@ public class PSS {
 		while (currentDate <= Task_Final) {
 			if (!dateList.get(currentDate).isEmpty()) {
 
-				System.out.println("=============" + Task.dateToHumanReadable(currentDate) + "=============");
+				System.out.println("=============" + Task.dateToHumanReadable(currentDate) + "============="); // Print header for the day.
+
 				// Sort by time.
 				dateList.get(currentDate).sort(new Comparator<Task>() {
 					@Override
@@ -331,7 +331,7 @@ public class PSS {
 				}
 			}
 
-			printSchedule(daySchedule);
+			//			printSchedule(daySchedule);
 
 			try {
 				DataFile.save(daySchedule, fileLocation);
@@ -351,7 +351,7 @@ public class PSS {
 					weeklySchedule.add(task);
 				}
 			}
-			printSchedule(weeklySchedule);
+			//			printSchedule(weeklySchedule);
 
 			try {
 				DataFile.save(weeklySchedule, fileLocation);
@@ -371,7 +371,7 @@ public class PSS {
 					monthlySchedule.add(task);
 				}
 			}
-			printSchedule(monthlySchedule);
+			//			printSchedule(monthlySchedule);
 
 			try {
 				DataFile.save(monthlySchedule, fileLocation);
@@ -467,7 +467,7 @@ public class PSS {
 		float targetStartTime = targetTask.getStartTime();
 		float targetEndTime = targetStartTime + targetTask.getDuration();
 		Task matchingTask;// Task that matches the time frame of Anti task.
-		ArrayList Days;
+		ArrayList<Integer> Days;
 
 		for (int i = 0; i < copyOfSchdule.size(); i++) {
 			matchingTask = copyOfSchdule.get(i);
@@ -494,7 +494,7 @@ public class PSS {
 
 				}
 			}
-		}//end for
+		}
 
 		return conflictFound;
 	}
@@ -584,7 +584,6 @@ public class PSS {
 	public boolean newTaskOverLapCheck(Task newTask) {
 		int date = newTask.getDate();
 
-
 		if (newTask.getTaskType() == Task.TaskType.ANTI) {
 			//Check that another Anti Task does not already exist here
 			Task foundAntiTask;
@@ -613,8 +612,9 @@ public class PSS {
 
 				//Check newTask against other Transient Tasks(matchingTask)
 				if (matchingTask.getTaskType() == Task.TaskType.TRANSIENT) {
-					// Check if in date range
-					if (date == matchingTask.getDate() || addDay(matchingTask.getDate(), 1) == date || addDay(date, 1) == matchingTask.getDate()) {
+					// Check if newTask matches date or is before or after date.
+					if (date == matchingTask.getDate() || addDay(matchingTask.getDate(), 1) == date
+							|| addDay(date, 1) == matchingTask.getDate()) {
 
 						// Check time overlap
 						if (checkTimeOverlap(newTask, matchingTask)) {
@@ -627,8 +627,9 @@ public class PSS {
 					ArrayList<Integer> matchingTaskDays = createDays((RecurringTask) matchingTask);
 
 					for (int x = 0; x < matchingTaskDays.size(); x++) {
-						//Check if newTask startDate matches any of the dates from the Recurring task in schedule
-						if (date == matchingTaskDays.get(x) || addDay(matchingTask.getDate(), 1) == date || addDay(date, 1) == matchingTask.getDate()) {
+						// Check if newTask matches date or is before or after date.
+						if (date == matchingTaskDays.get(x) || addDay(matchingTask.getDate(), 1) == date
+								|| addDay(date, 1) == matchingTask.getDate()) {
 
 							//Check if the times on the matching days overlap
 							if (checkTimeOverlap(newTask, matchingTask)) {
@@ -653,8 +654,10 @@ public class PSS {
 					ArrayList<Integer> matchingTaskDays = createDays((RecurringTask) newTask);
 
 					for (int x = 0; x < matchingTaskDays.size(); x++) {
-						//Check if newTask Date List matches the date from the task in schedule
-						if (matchingTask.getDate() == matchingTaskDays.get(x) || addDay(matchingTask.getDate(), 1) == matchingTaskDays.get(x) || addDay(matchingTaskDays.get(x), 1) == matchingTask.getDate()) {
+						// Check if newTask Date List matches date or is before or after date.
+						if (matchingTask.getDate() == matchingTaskDays.get(x)
+								|| addDay(matchingTask.getDate(), 1) == matchingTaskDays.get(x)
+								|| addDay(matchingTaskDays.get(x), 1) == matchingTask.getDate()) {
 
 							//Check if the times on the matching days overlap
 							if (checkTimeOverlap(newTask, matchingTask)) {
@@ -676,7 +679,9 @@ public class PSS {
 						newDate = newTaskDays.get(a);
 
 						for (int b = 0; b < matchingTaskDays.size(); b++) {
-							if (newDate == matchingTaskDays.get(b) || addDay(matchingTaskDays.get(b), 1) == newDate || addDay(newDate, 1) == matchingTaskDays.get(b)) {
+							// Check if newTask Date List matches dates in Date List or is before or after dates in Date List.
+							if (newDate == matchingTaskDays.get(b) || addDay(matchingTaskDays.get(b), 1) == newDate
+									|| addDay(newDate, 1) == matchingTaskDays.get(b)) {
 
 								// Check for time overlap.
 								if (checkTimeOverlap(newTask, matchingTask)) {
@@ -702,7 +707,7 @@ public class PSS {
 	 * Take into consideration the type of task we are trying to create(ANTI,TRANSIENT,RECURRING)
 	 * 
 	 * @param newTask task we want to add
-	 * @return false is there is no overlap. True + give message if there is overlap.
+	 * @return false is there is no overlap. Otherwise, throws Exception with message of problem.
 	 * @throws Exception 
 	 */
 	public static boolean newTaskOverLapCheckCode(Task newTask) throws Exception {
@@ -735,8 +740,9 @@ public class PSS {
 
 				//Check newTask against other Transient Tasks(matchingTask)
 				if (matchingTask.getTaskType() == Task.TaskType.TRANSIENT) {
-					// Check if in date range
-					if (date == matchingTask.getDate()) {
+					// Check if newTask matches date or is before or after date.
+					if (date == matchingTask.getDate() || addDay(matchingTask.getDate(), 1) == date
+							|| addDay(date, 1) == matchingTask.getDate()) {
 
 						// Check time overlap
 						if (checkTimeOverlap(newTask, matchingTask)) {
@@ -748,8 +754,9 @@ public class PSS {
 					ArrayList<Integer> matchingTaskDays = createDays((RecurringTask) matchingTask);
 
 					for (int x = 0; x < matchingTaskDays.size(); x++) {
-						//Check if newTask startDate matches any of the dates from the Recurring task in schedule
-						if (date == matchingTaskDays.get(x)) {
+						// Check if newTask matches date or is before or after date.
+						if (date == matchingTaskDays.get(x) || addDay(matchingTask.getDate(), 1) == date
+								|| addDay(date, 1) == matchingTask.getDate()) {
 
 							//Check if the times on the matching days overlap
 							if (checkTimeOverlap(newTask, matchingTask)) {
@@ -773,8 +780,10 @@ public class PSS {
 					ArrayList<Integer> matchingTaskDays = createDays((RecurringTask) newTask);
 
 					for (int x = 0; x < matchingTaskDays.size(); x++) {
-						//Check if newTask Date List matches the date from the task in schedule
-						if (matchingTask.getDate() == matchingTaskDays.get(x)) {
+						// Check if newTask Date List matches date or is before or after date.
+						if (matchingTask.getDate() == matchingTaskDays.get(x)
+								|| addDay(matchingTask.getDate(), 1) == matchingTaskDays.get(x)
+								|| addDay(matchingTaskDays.get(x), 1) == matchingTask.getDate()) {
 
 							//Check if the times on the matching days overlap
 							if (checkTimeOverlap(newTask, matchingTask)) {
@@ -795,7 +804,9 @@ public class PSS {
 						newDate = newTaskDays.get(a);
 
 						for (int b = 0; b < matchingTaskDays.size(); b++) {
-							if (newDate == matchingTaskDays.get(b)) {
+							// Check if newTask Date List matches dates in Date List or is before or after dates in Date List.
+							if (newDate == matchingTaskDays.get(b) || addDay(matchingTaskDays.get(b), 1) == newDate
+									|| addDay(newDate, 1) == matchingTaskDays.get(b)) {
 
 								// Check for time overlap.
 								if (checkTimeOverlap(newTask, matchingTask)) {
@@ -842,16 +853,16 @@ public class PSS {
 				return true;
 			}
 		}
-		
-		// Quick and dirty. This reallly isn't preferable.
-		if (t1.getDate() < t2.getDate() && end1 > 24.0) { // Check if this task wraps over any other task in the next day.
-			float nextDayEnd = (float) (end1-24.0);
+
+		// If this t1 data is before t2 date and t1 wraps to the next day:
+		if (t1.getDate() < t2.getDate() && end1 > 24) { // Check if this task wraps over any other task in the next day.
+			float nextDayEnd = end1 - 24;
 			if (nextDayEnd > start2) {
 				return true;
 			}
-			
-		} else if (t1.getDate() > t2.getDate() && end2 > 24.0) { // Check if the task we're comparing against wraps over this task
-			float nextDayEnd = (float) (end2-24.0);
+
+		} else if (t1.getDate() > t2.getDate() && end2 > 24) { // If this t1 data is after t2 date and t2 wraps to the next day:
+			float nextDayEnd = end2 - 24;
 			if (nextDayEnd > start1) {
 				return true;
 			}

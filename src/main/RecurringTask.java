@@ -11,17 +11,16 @@ public class RecurringTask extends Task {
 	private int frequency;
 
 	/**
-	 *
+	 * Constructs a RecurringTask in a direct manner with errors for any input problems.
+	 * @param name
 	 * @param startTime
 	 * @param duration
 	 * @param date
 	 * @param tname
 	 * @param end
-	 * @param date
 	 * @param freq
 	 * @throws Exception
 	 */
-
 	public RecurringTask(String name, float startTime, float duration, int date, String tname, int end, int freq)
 			throws Exception {
 		super(name, startTime, duration, date, tname, Task.TaskType.RECURRING);
@@ -35,6 +34,11 @@ public class RecurringTask extends Task {
 		PSS.newTaskOverLapCheckCode(this);
 	}
 
+	/**
+	 * Constructs a RecurringTask with values obtained from the user, all while verifying them.
+	 * @param handler
+	 * @param typeName
+	 */
 	public RecurringTask(UserHandler handler, String typeName) {
 		super(handler);
 		setTaskType(Task.TaskType.RECURRING);
@@ -49,6 +53,11 @@ public class RecurringTask extends Task {
 
 	///////////////////////////// UserHandler Setters /////////////////////////////
 
+	/**
+	 * Setter for the endDate variable.
+	 * Verifies that endDate follows basic formatting rules (YYYYMMDD pattern).
+	 * @param handler
+	 */
 	public void setEndDate(UserHandler handler) {
 		int date = handler.getInt();
 		boolean valid = false;
@@ -96,6 +105,11 @@ public class RecurringTask extends Task {
 		this.endDate = date;
 	}
 
+	/**
+	 * Setter for the frequency variable.
+	 * Verifies that the frequency follows basic formatting rules. Can only be 1 for daily, or 7 for weekly.
+	 * @param handler
+	 */
 	public void setFrequency(UserHandler handler) {
 		int freq = handler.getInt();
 		boolean valid = false;
@@ -115,6 +129,11 @@ public class RecurringTask extends Task {
 
 	///////////////////////////// Code Setters /////////////////////////////
 
+	/**
+	 * A direct setter for the endDate variable.
+	 * @param endDate following (YYYYMMDD) pattern.
+	 * @throws Exception if the endDate doesn't follow the proper format.
+	 */
 	public void setEndDate(int endDate) throws Exception {
 		String sDate = String.valueOf(endDate);
 		int[] dayInMonth = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
@@ -149,11 +168,19 @@ public class RecurringTask extends Task {
 		this.endDate = endDate;
 	}
 
+	/**
+	 * @deprecated use setDate() instead.
+	 */
 	@Deprecated
 	public void setStartDate(int startDate) throws Exception {
 		setDate(startDate);
 	}
 
+	/**
+	 * A direct setter for the frequency variable.
+	 * @param frequency the frequency of this RecurringTask. Can only be 1 for daily, or 7 for weekly.
+	 * @throws Exception
+	 */
 	public void setFrequency(int frequency) throws Exception {
 		// frequency doesn't equal 1 or 7, give error
 		if (frequency != 1 && frequency != 7)
@@ -167,6 +194,9 @@ public class RecurringTask extends Task {
 		return endDate;
 	}
 
+	/**
+	 * @deprecated use getDate() instead.
+	 */
 	@Deprecated
 	public int getStartDate() {
 		return getDate();

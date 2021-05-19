@@ -11,15 +11,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- *
- */
 public class DataFile {
 
 	/**
-	 * 
-	 * @param handler
-	 * @return
+	 * Attempts to load the file at the provided filePath.
+	 * @param filePath the file path where the JSON file resides
+	 * @return The list of valid tasks that were pulled from the JSON file at the provided filePath
 	 */
 	public static ArrayList<Task> load(String filePath) {
 		ArrayList<Task> output = new ArrayList<>();
@@ -86,21 +83,12 @@ public class DataFile {
 	}
 
 	/**
-	 *
-	 * @param filepath
-	 * @return
-	 */
-	public static boolean verify(String filepath) {
-		return false;
-	}
-	
-	/**
 	 * Saves the given Task data to the given filePath in JSON format.
 	 * 
 	 * @param data
 	 * @param filePath
 	 * @return boolean, if the save was successful or not.
-	 * @throws Exception 
+	 * @throws Exception if there was a problem finding the file location or writing to the file.
 	 */
 	public static void save(ArrayList<Task> data, String filePath) throws Exception {
 		try {
