@@ -598,7 +598,7 @@ public class PSS {
 					if (foundAntiTask.getDate() == date) {
 
 						// Check time overlap
-						if (checkTimeOverlap(newTask, foundAntiTask)) {
+						if (checkTimeOverlap(newTask, foundAntiTask, true)) {
 							System.out.println("Another Anti-Task, " + foundAntiTask.getName()
 									+ ", already exists for this time slot.");
 							return true;
@@ -617,7 +617,7 @@ public class PSS {
 							|| addDay(date, 1) == matchingTask.getDate()) {
 
 						// Check time overlap
-						if (checkTimeOverlap(newTask, matchingTask)) {
+						if (checkTimeOverlap(newTask, matchingTask, date == matchingTask.getDate())) {
 							System.out.println(
 									"The Transient Task, " + matchingTask.getName() + ", overlaps with your New Task.");
 							return true;
@@ -632,7 +632,7 @@ public class PSS {
 								|| addDay(date, 1) == matchingTask.getDate()) {
 
 							//Check if the times on the matching days overlap
-							if (checkTimeOverlap(newTask, matchingTask)) {
+							if (checkTimeOverlap(newTask, matchingTask, date == matchingTaskDays.get(x))) {
 								//Check if Reccuring task has an anti task for this time and day.
 								if (!hasAntiTask((RecurringTask) matchingTask, newTask.getDate())) {
 									//If no anti task is found then there is overlap
@@ -660,7 +660,8 @@ public class PSS {
 								|| addDay(matchingTaskDays.get(x), 1) == matchingTask.getDate()) {
 
 							//Check if the times on the matching days overlap
-							if (checkTimeOverlap(newTask, matchingTask)) {
+							if (checkTimeOverlap(newTask, matchingTask,
+									matchingTask.getDate() == matchingTaskDays.get(x))) {
 								//Since this is a new Reccuring Task it will not have any anti-Tasks and neither will the Transient task we are checking
 								System.out.println("The Transient Task, " + matchingTask.getName()
 										+ ", overlaps with your New Task.");
@@ -684,7 +685,7 @@ public class PSS {
 									|| addDay(newDate, 1) == matchingTaskDays.get(b)) {
 
 								// Check for time overlap.
-								if (checkTimeOverlap(newTask, matchingTask)) {
+								if (checkTimeOverlap(newTask, matchingTask, newDate == matchingTaskDays.get(b))) {
 									if (!hasAntiTask((RecurringTask) matchingTask, newTask.getDate())) {
 										System.out.println("The Reccuring Task " + matchingTask.getName()
 												+ ", overlaps with your new task.");
@@ -727,7 +728,7 @@ public class PSS {
 					if (foundAntiTask.getDate() == date) {
 
 						// Check time overlap
-						if (checkTimeOverlap(newTask, foundAntiTask)) {
+						if (checkTimeOverlap(newTask, foundAntiTask, true)) {
 							throw new Exception("The Anti-Task Task " + foundAntiTask.getName()
 									+ ", overlaps with Anti-Task: " + newTask.getName());
 						}
@@ -745,7 +746,7 @@ public class PSS {
 							|| addDay(date, 1) == matchingTask.getDate()) {
 
 						// Check time overlap
-						if (checkTimeOverlap(newTask, matchingTask)) {
+						if (checkTimeOverlap(newTask, matchingTask, date == matchingTask.getDate())) {
 							throw new Exception("The Transient Task " + matchingTask.getName()
 									+ ", overlaps with task: " + newTask.getName());
 						}
@@ -759,7 +760,7 @@ public class PSS {
 								|| addDay(date, 1) == matchingTask.getDate()) {
 
 							//Check if the times on the matching days overlap
-							if (checkTimeOverlap(newTask, matchingTask)) {
+							if (checkTimeOverlap(newTask, matchingTask, date == matchingTaskDays.get(x))) {
 								//Check if Reccuring task has an anti task for this time and day.
 								if (!hasAntiTask((RecurringTask) matchingTask, newTask.getDate())) {
 									//If no anti task is found then there is overlap
@@ -786,7 +787,8 @@ public class PSS {
 								|| addDay(matchingTaskDays.get(x), 1) == matchingTask.getDate()) {
 
 							//Check if the times on the matching days overlap
-							if (checkTimeOverlap(newTask, matchingTask)) {
+							if (checkTimeOverlap(newTask, matchingTask,
+									matchingTask.getDate() == matchingTaskDays.get(x))) {
 								//Since this is a new Reccuring Task it will not have any anti-Tasks and neither will the Transient task we are checking
 								throw new Exception("The Transient Task " + matchingTask.getName()
 										+ ", overlaps with task: " + newTask.getName());
@@ -809,7 +811,7 @@ public class PSS {
 									|| addDay(newDate, 1) == matchingTaskDays.get(b)) {
 
 								// Check for time overlap.
-								if (checkTimeOverlap(newTask, matchingTask)) {
+								if (checkTimeOverlap(newTask, matchingTask, newDate == matchingTaskDays.get(b))) {
 									if (!hasAntiTask((RecurringTask) matchingTask, newTask.getDate())) {
 										throw new Exception("The Reccuring Task " + matchingTask.getName()
 												+ ", overlaps with task: " + newTask.getName());
@@ -826,14 +828,14 @@ public class PSS {
 	}
 
 	/**
-	 * Checks if start1 and end1 overlap with start2 and end2. Also account for wrap around times
+	 * Checks if start1 and end1 overlap with start2 and end2. Also account for wrap around times TODO redo javadoc
 	 * @param start1
 	 * @param end1
 	 * @param start2
 	 * @param end2
 	 * @return false if no overlap. True if overlap exists.
 	 */
-	public static boolean checkTimeOverlap(Task t1, Task t2) {
+	public static boolean checkTimeOverlap(Task t1, Task t2, boolean sameDate) {
 
 		// 1. End time falls within the matching task time frame.
 		// 2. Start time falls within the matching task time frame.
@@ -843,7 +845,7 @@ public class PSS {
 
 		float start2 = t2.getStartTime();
 		float end2 = start2 + t2.getDuration();
-		if (t1.getDate() == t2.getDate()) {
+		if (sameDate) {
 			//Check for Overlapping times
 			if (end1 <= end2 && end1 >= start2) {
 				return true;
